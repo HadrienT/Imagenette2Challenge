@@ -1,0 +1,18 @@
+Model,time(s),hardware,batch_size,Run,Score
+LeNet_5_0,321,Colab GPU,32,Run2,0
+LeNet_5_0,233 ,laptop,32,Run2,0
+LeNet_5_0,249 ,laptop,32,Run2,0
+LeNet_5_0,1117,Colab CPU,32,Run2,0
+LeNet_5_0,369,Colab CPU,32,Run2,0
+LeNet_5_0,233 ,laptop,32,Run2,0
+LeNet_5_0,237 ,laptop,32,Run2,0
+LeNet_5_0,239 ,laptop,32,Run2,0
+LeNet_5_0,233 ,laptop,64,Run2,0
+LeNet_5_0,198 ,Colab CPU,64,Run2,0
+LeNet_5_0,235 ,laptop,32,Run1,0
+LeNet_5_0,218 ,Colab CPU,128,Run2,0
+LeNet_5_0,229,Colab CPU,32,Run1,0
+LeNet_5_0,226,Colab CPU,32,Run1,0
+LeNet_5_1,1115,laptop,32,Run1,22.95
+LeNet_5_0,180,laptop,32,Run1,21.91
+LeNet_5_2,130,laptop,32,Run1,20.20
