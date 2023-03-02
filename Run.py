@@ -3,7 +3,6 @@ import torchvision.transforms as transforms
 import torch.nn as nn
 
 import datetime
-import argparse
 import time
 import os 
 from tqdm import tqdm
@@ -26,9 +25,8 @@ def main():
     file_training = base_path +  'Datasets\\imagenette2\\train.txt'
     file_validation =  base_path +  'Datasets\\imagenette2\\val.txt'
     # check if the folder exists
-    if not os.path.exists(measures_folder_path):
-        # if the folder does not exist, create it
-        os.makedirs(measures_folder_path)
+    helpermethods.make_folder(measures_folder_path)
+        
     measures_folder_path = measures_folder_path + f"\\{date}.csv"
     measures_file = open(measures_folder_path,'a')
     measures_file.write(f"num_epoch,image (ms),criterion (ms),optimizer (ms),accuracy (ms),checkpoint (ms),epoch (s)\n")

@@ -3,6 +3,8 @@ import argparse
 from torch.utils.data import DataLoader
 import torchvision.transforms as transforms
 import types
+import stat
+import os 
 
 def parse_arguments() -> argparse.Namespace:
    # Define the argument parser
@@ -17,10 +19,6 @@ def parse_arguments() -> argparse.Namespace:
     parser.add_argument('--transformed',type=bool, action=argparse.BooleanOptionalAction,help='Select which dataset to use (--no-transformed for raw images)')
     parser.add_argument('--metric' , type=int, default=1, help='Number of most probable classes to correctly classify (default: 1)')
     return parser.parse_args()
-
-
-
-
 
 def load_dataset(CustomDataset_module:types.ModuleType,file:str, transform:transforms, args:argparse.Namespace) -> DataLoader:
     labels = ['tench', 'English springer', 'cassette player', 'chain saw', 'church', 'French horn', 'garbage truck', 'gas pump', 'golf ball', 'parachute']
@@ -43,11 +41,18 @@ def compute_accuracy(output:torch.Tensor, labels:torch.Tensor,args:argparse.Name
     _, predicted = torch.topk(output, k=args.metric, dim=1)
     correct = (predicted == labels.view(-1, 1)).sum().item()
     return correct
-    # _, predicted = torch.topk(output.data, k=args.metric, dim=1)
-    # predicted = predicted.t()
-    # correct = predicted.eq(labels.view(1, -1).expand_as(predicted))
-    # correct_1 = correct[:1].view(-1).float().sum(0, keepdim=True)
-    # correct_2 = correct[1:].view(-1).float().sum(0, keepdim=True)
-    # correct_both = (correct_1 + correct_2).item()
-    # accuracy = correct_both / labels.size(0)
-    # return accuracy
+       
+def make_folder(path:str) -> None:
+
+    # Check if the user has write permission for the parent directory
+    parent_dir = os.path.dirname(path)
+    if not os.access(parent_dir, os.W_OK):
+        raise PermissionError(f"You do not have permission to write to {parent_dir}")
+
+    # Check if the measures folder exists, and create it if necessary
+    if not os.path.isdir(path):
+        try:
+            os.makedirs(path, exist_ok=True)
+            os.chmod(path, stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR) # set permissions to owner only
+        except OSError as e:
+            raise OSError(f"Failed to create measures folder: {e}")
