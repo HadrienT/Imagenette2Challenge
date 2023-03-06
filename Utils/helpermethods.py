@@ -5,12 +5,12 @@ import torchvision.transforms as transforms
 import types
 import stat
 import os 
+import multiprocessing
 
 def parse_arguments() -> argparse.Namespace:
    # Define the argument parser
     parser = argparse.ArgumentParser(description='Train or evaluate a model')
     # Add arguments
-    parser.add_argument('--mode', type=str, default='train', choices=['train', 'infer'], help='mode to run the script in')
     parser.add_argument('--model', type=str, default='LeNet_5_0', help='model to use')
     parser.add_argument('--epochs', type=int, default=5, help='number of training epochs (default: 5)')
     parser.add_argument('--batch_size', type=int, default=32, help='Batch size (default: 32)')
@@ -56,3 +56,6 @@ def make_folder(path:str) -> None:
             os.chmod(path, stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR) # set permissions to owner only
         except OSError as e:
             raise OSError(f"Failed to create measures folder: {e}")
+        
+def send_result(queue, result):
+    queue.put(result)

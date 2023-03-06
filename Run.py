@@ -7,11 +7,11 @@ import time
 import os 
 from tqdm import tqdm
 import importlib
-from Visualization import plot_metrics, plot_time_measures
-from Header import print_header
-import helpermethods
+from Utils.Visualization import plot_metrics, plot_time_measures
+from Utils.Header import print_header
+import Utils.helpermethods as helpermethods
 
-def main():  
+def main()->None: 
     NUMBER_CLASSES = 10
     date = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     
@@ -41,9 +41,6 @@ def main():
         CustomDataset_module = importlib.import_module('dataLoaders.CustomDatasetTransformed')
     else :
         CustomDataset_module = importlib.import_module('dataLoaders.CustomDatasetRaw')
-        
-   
-
     # Check if GPU is available
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model = model.to(device)
@@ -59,161 +56,143 @@ def main():
     transform = transforms.Compose([
         transforms.Resize((256, 256)),
         transforms.ToTensor(),
-        # transforms.Normalize(mean=[0.485, 0.456, 0.406],std=[0.229, 0.224, 0.225])
-        transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),  # Normalize tensor values to range [-1, 1]
+        transforms.Normalize(mean=[0.485, 0.456, 0.406],std=[0.229, 0.224, 0.225])
+        # transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),  # Normalize tensor values to range [-1, 1]
     ])
 
-   # Load the datasets
+    # Load the datasets
     print('Loading the dataset...')
     start = time.time()
     train_loader = helpermethods.load_dataset(CustomDataset_module, file_training, transform, args)
     val_loader = helpermethods.load_dataset(CustomDataset_module, file_validation, transform, args)
     print(f"Time to load the Dataset : {(time.time()-start)*1000:.3f} ms")
-    
+        
     # Train the model
-    if args.mode == 'train':
-        print('Training the model...')
+    print('Training the model...')
 
-        # Define loss function and optimizer
-        criterion = nn.CrossEntropyLoss()
-        optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
+    # Define loss function and optimizer
+    criterion = nn.CrossEntropyLoss()
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
         
-        # Load the checkpoint if it exists
-        if os.path.exists(checkpoint_path):
-            checkpoint = torch.load(checkpoint_path)
-            model.load_state_dict(checkpoint["model_state_dict"])
-            optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
-            best_loss = checkpoint["best_loss"]
-        else:
-            best_loss = float("inf")
-            
-        losses_training = []
-        accuracies_training = []
-        
-        losses_validation = []
-        accuracies_validation = []
-
-        for epoch in range(args.epochs):
-            # Training
-            train_loss = 0
-            train_correct = 0
-            train_total = 0
-            
-            # Set model to training mode
-            model.train()
-            
-            # Use the dataloader to access the data in batches
-            start_epoch = time.time()
-            for inputs,labels in tqdm(train_loader,desc='Training',leave=True):
-
-                # Move the data to the GPU if available
-                inputs,labels = inputs.to(device),labels.to(device)
-
-                start_train = time.time()
-                outputs = model(inputs)
-                end_train = time.time()
-                
-                start_crit = time.time()
-                loss = criterion(outputs, labels)
-                end_crit = time.time()
-                
-                # Backward pass and optimization
-                start_opti = time.time()
-                optimizer.zero_grad()
-                loss.backward()
-                optimizer.step()
-                end_opti = time.time()
-                
-                # compute accuracy
-                start_acc = time.time()
-                train_accuracy = helpermethods.compute_accuracy(outputs, labels, args)
-                end_acc = time.time()                
-                
-                # update metrics
-                train_loss += loss.item() * inputs.size(0)
-                train_correct += train_accuracy
-                train_total += inputs.size(0)
-                
-                start_save = 0
-                if loss.item() < best_loss:
-                    start_save = time.time()
-                    best_loss = loss.item()
-                    
-                    # Save the best weights to file
-                    torch.save({
-                        "model_state_dict": model.state_dict(),
-                        "optimizer_state_dict": optimizer.state_dict(),
-                        "best_loss": best_loss
-                    }, checkpoint_path)
-                end_save = 0 if start_save == 0 else time.time()
-            end_epoch = time.time()  
-            
-            # Compute average training loss and accuracy
-            train_loss /= len(train_loader.dataset)
-            train_acc = train_correct / train_total
-            
-            # Validation
-            val_loss = 0
-            val_correct = 0
-            val_total = 0
-            
-            # Set model to evaluation mode
-            model.eval()
-
-            with torch.no_grad():
-                for inputs, labels in tqdm(val_loader,desc='Validation',leave=True):
-                    # Move the data to the GPU if available
-                    inputs,labels = inputs.to(device),labels.to(device)
-                    outputs = model(inputs)
-                    loss = criterion(outputs, labels)
-
-                    # Calculate validation loss and accuracy
-                    val_accuracy = helpermethods.compute_accuracy(outputs, labels, args)
-                    
-                    # update metrics
-                    val_correct += val_accuracy
-                    val_loss += loss.item() * inputs.size(0)
-                    val_total += inputs.size(0)
-
-            
-            measures = f'{epoch},{end_train-start_train:.3f},{end_crit-start_crit:.3f},{end_opti-start_opti:.3f},{end_acc-start_acc:.3f},{end_save-start_save:.3f},{end_epoch-start_epoch:.3f}\n' 
-            measures_file.write(measures)
-            
-            # Compute average validation loss and accuracy
-            val_loss /= len(val_loader.dataset)
-            val_acc = val_correct / val_total
-            
-            # log metrics
-            losses_training.append(train_loss)
-            accuracies_training.append(train_acc)
-            
-            losses_validation.append(val_loss)
-            accuracies_validation.append(val_accuracy)
-            print(f"Epoch [{epoch+1}/{args.epochs}]: Trainign loss = {train_loss:.3f}, Training accuracy = {train_acc:.3f}")
-            print(f"Epoch [{epoch+1}/{args.epochs}]: Validation loss = {val_loss:.3f}, Validation accuracy = {val_acc:.3f}")
-        
-        measures_file.close()
-        if args.figures and args.epochs > 1:    
-            plot_metrics(losses_training, accuracies_training,losses_validation,accuracies_validation, args)
-            plot_time_measures(measures_folder_path)
-        
-    if args.mode == 'infer' :
-        print('Testing the model...')
+    # Load the checkpoint if it exists
+    if os.path.exists(checkpoint_path):
         checkpoint = torch.load(checkpoint_path)
         model.load_state_dict(checkpoint["model_state_dict"])
+        optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
+        best_loss = checkpoint["best_loss"]
+    else:
+        best_loss = float("inf")
+            
+    losses_training = []
+    accuracies_training = []
+        
+    losses_validation = []
+    accuracies_validation = []
+
+    for epoch in range(args.epochs):
+        # Training
+        train_loss = 0
+        train_correct = 0
+        train_total = 0
+            
+        # Set model to training mode
+        model.train()
+            
+        # Use the dataloader to access the data in batches
+        start_epoch = time.time()
+        for inputs,labels in tqdm(train_loader,desc='Training',leave=True):
+
+            # Move the data to the GPU if available
+            inputs,labels = inputs.to(device),labels.to(device)
+
+            start_train = time.time()
+            outputs = model(inputs)
+            end_train = time.time()
+                
+            start_crit = time.time()
+            loss = criterion(outputs, labels)
+            end_crit = time.time()
+                
+            # Backward pass and optimization
+            start_opti = time.time()
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+            end_opti = time.time()
+                
+            # compute accuracy
+            start_acc = time.time()
+            train_accuracy = helpermethods.compute_accuracy(outputs, labels, args)
+            end_acc = time.time()                
+                
+            # update metrics
+            train_loss += loss.item() * inputs.size(0)
+            train_correct += train_accuracy
+            train_total += inputs.size(0)
+                
+            start_save = 0
+            if loss.item() < best_loss:
+                start_save = time.time()
+                best_loss = loss.item()
+                    
+                # Save the best weights to file
+                torch.save({
+                    "model_state_dict": model.state_dict(),
+                    "optimizer_state_dict": optimizer.state_dict(),
+                    "best_loss": best_loss
+                }, checkpoint_path)
+            end_save = 0 if start_save == 0 else time.time()
+        end_epoch = time.time()  
+            
+        # Compute average training loss and accuracy
+        train_loss /= len(train_loader.dataset)
+        train_acc = train_correct / train_total
+            
+        # Validation
+        val_loss = 0
+        val_correct = 0
+        val_total = 0
+            
+        # Set model to evaluation mode
         model.eval()
-        correct = 0
-        total = 0
+
         with torch.no_grad():
-            for inputs,labels in tqdm(val_loader,desc='Infering',leave=True):
+            for inputs, labels in tqdm(val_loader,desc='Validation',leave=True):
                 # Move the data to the GPU if available
                 inputs,labels = inputs.to(device),labels.to(device)
                 outputs = model(inputs)
-                
+                loss = criterion(outputs, labels)
+
                 # Calculate validation loss and accuracy
-                correct += helpermethods.compute_accuracy(outputs, labels, args)
-                total += labels.size(0)
-        print(f'Accuracy of the network on the {len(val_loader.dataset)} test images: {(100 * correct / total):.4f} %')
+                val_accuracy = helpermethods.compute_accuracy(outputs, labels, args)
+                    
+                # update metrics
+                val_correct += val_accuracy
+                val_loss += loss.item() * inputs.size(0)
+                val_total += inputs.size(0)
+
+            
+        measures = f'{epoch},{end_train-start_train:.3f},{end_crit-start_crit:.3f},{end_opti-start_opti:.3f},{end_acc-start_acc:.3f},{end_save-start_save:.3f},{end_epoch-start_epoch:.3f}\n' 
+        measures_file.write(measures)
+            
+        # Compute average validation loss and accuracy
+        val_loss /= len(val_loader.dataset)
+        val_acc = val_correct / val_total
+            
+        # log metrics
+        losses_training.append(train_loss)
+        accuracies_training.append(train_acc)
+            
+        losses_validation.append(val_loss)
+        accuracies_validation.append(val_accuracy)
+        print(f"Epoch [{epoch+1}/{args.epochs}]: Trainign loss = {train_loss:.3f}, Training accuracy = {train_acc:.3f}")
+        print(f"Epoch [{epoch+1}/{args.epochs}]: Validation loss = {val_loss:.3f}, Validation accuracy = {val_acc:.3f}")
+        
+    measures_file.close()
+    if args.figures and args.epochs > 1:    
+        plot_metrics(losses_training, accuracies_training,losses_validation,accuracies_validation, args)
+        plot_time_measures(measures_folder_path)
+        
 
 if __name__ == '__main__':
     main()

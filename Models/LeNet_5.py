@@ -36,6 +36,6 @@ class Model(nn.Module):
         x = torch.tanh(x)
         
         x = self.fc3(x)
-        x = torch.softmax(x,dim=1)
+        # x = torch.softmax(x,dim=1)
         
         return x

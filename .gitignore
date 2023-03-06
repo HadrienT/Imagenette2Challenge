@@ -4,3 +4,7 @@ Datasets/
 Checkpoints/
 
 MNIST/
+
+dataLoaders/__pycache__/
+
+__pycache__/

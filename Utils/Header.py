@@ -11,7 +11,6 @@ def print_header(args:argparse.Namespace,params:dict) -> None:
     print()
     print("Hyperparameters:")
     print(f"- Model: {args.model}")
-    print(f"- Mode: {'Infering' if args.mode == 'infer' else 'Training'}")
     print(f"- Epochs: {args.epochs}")
     print(f"- Batch size: {args.batch_size}")
     print(f"- Metric: {args.metric}")

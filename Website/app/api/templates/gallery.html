@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Image Grid</title>
+    <style>
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-gap: 10px;
+        }
+
+        .grid-item {
+            text-align: center;
+        }
+
+        .grid-item img {
+            width: 256px;
+            height: 256px;
+        }
+
+        .grid-item .label {
+            margin-top: 5px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="grid-container">
+        {% for image_dict in Infer_list %}
+        <div class="grid-item">
+            <img src="{{ image_dict.path }}" alt="Image">
+            <div class="label">{{ image_dict.label }}</div>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+
+
+<script>
+    window.addEventListener('load', (event) => {
+        fetch('/delete', { method: 'DELETE' })
+            .then(response => response.json())
+            .then(data => console.log(data))
+            .catch(error => console.error(error))
+    })
+</script>
+
+</html>
