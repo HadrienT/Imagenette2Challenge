@@ -26,7 +26,6 @@ class Model(nn.Module):
         x = torch.tanh(x)
         x = self.pool(x)
         
-        # x = x.view(-1, 16 * 61 * 61) #flatten the tensor
         x = x.flatten(start_dim=1)
         
         x = self.fc1(x)

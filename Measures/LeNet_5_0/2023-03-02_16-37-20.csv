@@ -1,2 +1,0 @@
-num_epoch,image (ms),criterion (ms),optimizer (ms),accuracy (ms),checkpoint (ms),epoch (s)
-0,0.112,0.000,0.336,0.000,0.000,226.620

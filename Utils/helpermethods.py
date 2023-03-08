@@ -5,7 +5,6 @@ import torchvision.transforms as transforms
 import types
 import stat
 import os 
-import multiprocessing
 
 def parse_arguments() -> argparse.Namespace:
    # Define the argument parser
@@ -32,9 +31,10 @@ def load_dataset(CustomDataset_module:types.ModuleType,file:str, transform:trans
             labels.append(label_to_index.get(line.split(',')[1].replace('\n', ''))) # Remove the newline character from the label and convert it to an integer
     f.close()  
     
-    data_training = CustomDataset_module.CustomDataset(image_paths, labels, transform)
     # Create a dataloader to load the data in batches
+    data_training = CustomDataset_module.CustomDataset(image_paths, labels, transform)
     dataloader_training = torch.utils.data.DataLoader(data_training, batch_size=args.batch_size, shuffle=True,num_workers=6)
+
     return dataloader_training
     
 def compute_accuracy(output:torch.Tensor, labels:torch.Tensor,args:argparse.Namespace):

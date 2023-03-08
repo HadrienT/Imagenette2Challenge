@@ -120,7 +120,7 @@ class App(tk.Frame):
         if self.proc and self.proc.poll() is None:
             messagebox.showinfo("Error", "A subprocess is already running.")
             return
-        cmd = ["python", "run.py",
+        cmd = ["python", "Run.py",
                "--model", model,"--epochs", epochs,
                "--batch_size", batch_size,
                "--checkpoint", checkpoint,

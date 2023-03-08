@@ -59,7 +59,6 @@ def main()->None:
         transforms.Normalize(mean=[0.485, 0.456, 0.406],std=[0.229, 0.224, 0.225])
         # transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),  # Normalize tensor values to range [-1, 1]
     ])
-
     # Load the datasets
     print('Loading the dataset...')
     start = time.time()
@@ -101,7 +100,6 @@ def main()->None:
         # Use the dataloader to access the data in batches
         start_epoch = time.time()
         for inputs,labels in tqdm(train_loader,desc='Training',leave=True):
-
             # Move the data to the GPU if available
             inputs,labels = inputs.to(device),labels.to(device)
 
