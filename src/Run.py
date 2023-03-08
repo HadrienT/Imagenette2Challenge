@@ -7,9 +7,9 @@ import time
 import os 
 from tqdm import tqdm
 import importlib
-from Utils.Visualization import plot_metrics, plot_time_measures
-from Utils.Header import print_header
-import Utils.helpermethods as helpermethods
+from utils.Visualization import plot_metrics, plot_time_measures
+from utils.Header import print_header
+import utils.helpermethods as helpermethods
 
 def main()->None: 
     NUMBER_CLASSES = 10
@@ -18,7 +18,7 @@ def main()->None:
     # Parse the arguments
     args = helpermethods.parse_arguments()
     
-    SSD = False
+    SSD = True
     base_path = 'E:\\ML\\' if SSD else '.\\'
     measures_folder_path = base_path + f"Measures\\{args.model}"
     checkpoint_path = base_path + 'Checkpoints\\' + args.checkpoint + '.pt'

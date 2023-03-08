@@ -12,3 +12,7 @@ __pycache__/
 Measures/
 
 Website/Temp/
+
+.venv/
+
+src/Website/Temp/

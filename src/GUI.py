@@ -17,7 +17,7 @@ class App(tk.Frame):
         self.pack(pady=20)
         
         # Model parameter
-        models = os.listdir('./Models/')
+        models = os.listdir('./src/Models/')
         models = [model.split('.py')[0] for model in models if model.endswith('.py') and model.split('.py')[0][0].isalpha()]
 
         self.model_label = tk.Label(self, text="Model:")
@@ -120,16 +120,19 @@ class App(tk.Frame):
         if self.proc and self.proc.poll() is None:
             messagebox.showinfo("Error", "A subprocess is already running.")
             return
-        cmd = ["python", "Run.py",
-               "--model", model,"--epochs", epochs,
-               "--batch_size", batch_size,
-               "--checkpoint", checkpoint,
-               "--metric", potential_targets,
+        cmd = ["python", ".\\src\\Run.py",
+                "--model", model,"--epochs", epochs,
+                "--batch_size", batch_size,
+                "--checkpoint", checkpoint,
+                "--metric", potential_targets,
                ]
+        
         cmd += ["--figures"] if figures else ["--no-figures"]
         cmd += ["--transformed"] if transformed else ["--no-transformed"]
-        self.proc = subprocess.Popen(cmd)
+        self.proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
 
+        output = self.proc.communicate()[0]
+        print(output.decode('utf-8'))
     
 def main():
     root = tk.Tk()

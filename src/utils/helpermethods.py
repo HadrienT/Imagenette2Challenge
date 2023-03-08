@@ -2,6 +2,7 @@ import torch
 import argparse
 from torch.utils.data import DataLoader
 import torchvision.transforms as transforms
+import multiprocessing
 import types
 import stat
 import os 
@@ -29,7 +30,7 @@ def load_dataset(CustomDataset_module:types.ModuleType,file:str, transform:trans
         for line in f:
             image_paths.append(line.split(',')[0])
             labels.append(label_to_index.get(line.split(',')[1].replace('\n', ''))) # Remove the newline character from the label and convert it to an integer
-    f.close()  
+    f.close()   
     
     # Create a dataloader to load the data in batches
     data_training = CustomDataset_module.CustomDataset(image_paths, labels, transform)
@@ -37,7 +38,7 @@ def load_dataset(CustomDataset_module:types.ModuleType,file:str, transform:trans
 
     return dataloader_training
     
-def compute_accuracy(output:torch.Tensor, labels:torch.Tensor,args:argparse.Namespace):
+def compute_accuracy(output:torch.Tensor, labels:torch.Tensor,args:argparse.Namespace) -> int:
     _, predicted = torch.topk(output, k=args.metric, dim=1)
     correct = (predicted == labels.view(-1, 1)).sum().item()
     return correct
@@ -57,5 +58,5 @@ def make_folder(path:str) -> None:
         except OSError as e:
             raise OSError(f"Failed to create measures folder: {e}")
         
-def send_result(queue, result):
+def send_result(queue:multiprocessing.Queue, result:list) -> None:
     queue.put(result)

@@ -1,6 +1,7 @@
 import os
 from PIL import Image
 from torch.utils.data import Dataset
+
 class CustomDataset(Dataset):
     def __init__(self, folder_path, transform=None):
         self.folder_path = folder_path
