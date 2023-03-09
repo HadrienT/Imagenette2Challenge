@@ -1,6 +1,7 @@
 import os
 
-def create_directory_structure(project_name : str) -> None:
+
+def create_directory_structure(project_name: str) -> None:
     project_directory = os.path.join(os.getcwd(), project_name)
 
     # create project directory
@@ -82,7 +83,8 @@ def create_directory_structure(project_name : str) -> None:
         f.write(" return [{'username': 'alice'}, {'username': 'bob'}]\n")
 
     print(f"Created project structure for {project_name}.")
-    
+
+
 if __name__ == '__main__':
     print("Creating project structure...")
     create_directory_structure('fastapi_website')

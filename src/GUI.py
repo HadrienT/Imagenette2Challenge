@@ -4,19 +4,20 @@ from tkinter import ttk
 import subprocess
 import atexit
 import os
-from typing import Optional 
+from typing import Optional
 
 SSD = False
 base_path = "E:\\ML\\" if SSD else ".\\"
 
+
 class App(tk.Frame):
-    def __init__(self, master:tk.Tk) -> None:
+    def __init__(self, master: tk.Tk) -> None:
         super().__init__(master)
         self.master = master
-        self.master.title("GUI Launcher") 
-        self.master.geometry("600x300") 
+        self.master.title("GUI Launcher")
+        self.master.geometry("600x300")
         self.pack(pady=20)
-        
+
         # Model parameter
         models = os.listdir('./src/Models/')
         models = [model.split('.py')[0] for model in models if model.endswith('.py') and model.split('.py')[0][0].isalpha()]
@@ -47,7 +48,6 @@ class App(tk.Frame):
         self.batch_size_entry = tk.Entry(self, textvariable=self.batch_size_var)
         self.batch_size_entry.grid(row=2, column=1)
 
-
         # Checkpoint parameter
         checkpoints = os.listdir(base_path + 'Checkpoints\\')
         checkpoints = [checkpoint.split('.pt')[0] for checkpoint in checkpoints if checkpoint.endswith('.pt')]
@@ -55,15 +55,15 @@ class App(tk.Frame):
         self.checkpoint_label = tk.Label(self, text="Checkpoint:")
         self.checkpoint_label.grid(row=3, column=0, padx=10)
         self.checkpoint_var = tk.StringVar(value="")
-        
-        self.combo2 = ttk.Combobox(self,textvariable=self.checkpoint_var,values=checkpoints,state="normal")
+
+        self.combo2 = ttk.Combobox(self, textvariable=self.checkpoint_var, values=checkpoints, state="normal")
         if len(checkpoints) > 0:
             self.combo2.current(0)  # Set the default value
         self.combo2.grid(row=3, column=1)
         self.combo2.bind("<<ComboboxSelected>>", lambda e: self.checkpoint_var.set(self.combo2.get()))
         # Set the first value as the default option
         self.checkpoint_var.set(self.combo2.get())
-        
+
         # Number of potential classes
         self.possible_target_label = tk.Label(self, text="Potential targets:")
         self.possible_target_label.grid(row=4, column=0, padx=10)
@@ -92,13 +92,13 @@ class App(tk.Frame):
         # Run button
         self.run_button = tk.Button(self, text="Run", command=self.run)
         self.run_button.grid(row=7, column=1, pady=20)
-        
+
         # Create subprocess
         self.proc: Optional[subprocess.Popen[bytes]] = None
 
         # Register kill_subprocess function to be called when program is closing down
         atexit.register(self.kill_subprocess)
-            
+
     def kill_subprocess(self) -> None:
         if self.proc and self.proc.poll() is None:
             self.proc.terminate()
@@ -115,35 +115,38 @@ class App(tk.Frame):
 
         transformed_message = "Transformed" if transformed else "Raw"
         # Show parameter values
-        message = f"Model: {model}\nEpochs: {epochs}\nBatch size: {batch_size}\nCheckpoint: {checkpoint}\nPotential targets: {potential_targets} \nFigures: {figures}\nTransformed: {transformed_message}"
+        message = f"Model: {model}\nEpochs: {epochs}\nBatch size: {batch_size}\n \
+        Checkpoint: {checkpoint}\nPotential targets: {potential_targets} \n \
+        Figures: {figures}\nTransformed: {transformed_message}"
         messagebox.showinfo("Parameter values", message)
         # TODO: Call Run.py with the selected parameters
         if self.proc and self.proc.poll() is None:
             messagebox.showinfo("Error", "A subprocess is already running.")
             return
         cmd = ["python", ".\\src\\Run.py",
-                "--model", model,"--epochs", epochs,
-                "--batch_size", batch_size,
-                "--checkpoint", checkpoint,
-                "--metric", potential_targets,
+               "--model", model, "--epochs", epochs,
+               "--batch_size", batch_size,
+               "--checkpoint", checkpoint,
+               "--metric", potential_targets,
                ]
-        
+
         cmd += ["--figures"] if figures else ["--no-figures"]
         cmd += ["--transformed"] if transformed else ["--no-transformed"]
         self.proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
         if self.proc.poll() is not None:
-        # subprocess was created successfully
+            # subprocess was created successfully
             output = self.proc.communicate()[0]
             print(output.decode('utf-8'))
         else:
-        # subprocess creation failed
+            # subprocess creation failed
             print("Error creating subprocess")
-    
+
+
 def main() -> None:
     root = tk.Tk()
     app = App(master=root)
     app.mainloop()
-    
-        
+
+
 if __name__ == "__main__":
     main()

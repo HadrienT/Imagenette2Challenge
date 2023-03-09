@@ -1,5 +1,5 @@
-from fastapi import FastAPI, File, UploadFile,Request
-import os 
+from fastapi import FastAPI, File, UploadFile, Request
+import os
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 import Website.app.api.utils.helpermethodsWeb as helpermethodsWeb
@@ -14,8 +14,9 @@ app.mount("/images", StaticFiles(directory="./src/Website/Temp"), name="images")
 
 
 @app.get("/")
-async def main(request : Request = Header(None)) -> Any :
-    return templates.TemplateResponse("index.html", context={"request":request})
+async def main(request: Request = Header(None)) -> Any:
+    return templates.TemplateResponse("index.html", context={"request": request})
+
 
 @app.post("/upload")
 async def upload_images(images: List[UploadFile] = File(...)) -> RedirectResponse:
@@ -28,27 +29,27 @@ async def upload_images(images: List[UploadFile] = File(...)) -> RedirectRespons
     return RedirectResponse(url="/images-grid", status_code=303)
 
 
-
 @app.get("/predict")
-async def predict()-> dict[str,list[int]]:
+async def predict() -> dict[str, list[int]]:
     results = helpermethodsWeb.infer()
     return {"results": results}
 
+
 @app.get("/images-grid")
-async def get_image_grid(request : Request = Header(None)) -> Any:
-    path = f".\\src\\Website\\Temp"
+async def get_image_grid(request: Request = Header(None)) -> Any:
+    path = ".\\src\\Website\\Temp"
     image_paths = os.listdir(path)
     image_paths = ['images/' + path for path in image_paths]
     if len(image_paths) != 0:
         predict = helpermethodsWeb.infer()
     res = [dict(path=path, label=predict) for path, predict in zip(image_paths, predict)]
-    context = {"request":request,"Infer_list": res}
+    context = {"request": request, "Infer_list": res}
     return templates.TemplateResponse("gallery.html", context=context)
 
 
 @app.delete("/delete")
-async def onload() -> dict[str,str]:
-    path = f".\\src\\Website\\Temp"
+async def onload() -> dict[str, str]:
+    path = ".\\src\\Website\\Temp"
     helpermethodsWeb.empty_folder(path)
     return {"message": "Deleted all images"}
 

@@ -3,9 +3,10 @@ import torch
 import torchvision.transforms as transforms
 from PIL import Image
 
+
 def main() -> None:
-    folders = ['n01440764','n02102040','n02979186','n03000684','n03028079','n03394916','n03417042',
-    'n03425413','n03445777','n03888257']
+    folders = ['n01440764', 'n02102040', 'n02979186', 'n03000684', 'n03028079', 'n03394916', 'n03417042',
+               'n03425413', 'n03445777', 'n03888257']
 
     train_dir = './imagenette2/transformed/train/'
     val_dir = './imagenette2/transformed/val/'
@@ -26,14 +27,12 @@ def main() -> None:
         if not os.path.exists(val_folder):
             os.mkdir(val_folder)
 
-
     # Define the transformation to be applied on the images
     transform = transforms.Compose([
         transforms.Resize((256, 256)),
         transforms.ToTensor(),
-        transforms.Normalize(mean=[0.485, 0.456, 0.406],std=[0.229, 0.224, 0.225])
+        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
     ])
-
 
     root_dir = "./imagenette2"
     for folder in ["train", "val"]:
@@ -52,6 +51,7 @@ def main() -> None:
                 if image.mode == 'RGB':
                     tensor = transform(image)
                     torch.save(tensor, target_name)
+
 
 if __name__ == "__main__":
     main()

@@ -1,7 +1,8 @@
 import argparse
 from typing import Any
 
-def print_header(args:argparse.Namespace,params:dict[Any,Any]) -> None:
+
+def print_header(args: argparse.Namespace, params: dict[Any, Any]) -> None:
     print("##########################################################################")
     print("#                                                                        #")
     print("#                          Image Classification                          #")

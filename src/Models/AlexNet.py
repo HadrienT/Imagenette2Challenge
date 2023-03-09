@@ -11,7 +11,7 @@ import torch.nn as nn
 #         self.fc1 = nn.Linear(in_features=16*59*59,out_features=4096)
 #         self.fc2 = nn.Linear(in_features=4096,out_features=4096)
 #         self.fc3 = nn.Linear(in_features=4096,out_features=num_class)
-        
+
 #     def forward(self, x):
 #         x = torch.relu(self.conv1(x))
 #         x = self.pool(x)
@@ -24,9 +24,10 @@ import torch.nn as nn
 #         x = torch.relu(self.fc2(x))
 #         x = torch.sigmoid(self.fc3(x))
 #         return x
-        
+
+
 class Model(nn.Module):
-    def __init__(self, num_classes:int=1000) -> None:
+    def __init__(self, num_classes: int = 1000) -> None:
         super(Model, self).__init__()
         self.features = nn.Sequential(
             nn.Conv2d(3, 64, kernel_size=11, stride=4, padding=2),
@@ -54,7 +55,7 @@ class Model(nn.Module):
             nn.Linear(4096, num_classes),
         )
 
-    def forward(self, x:torch.Tensor) -> torch.Tensor:
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         x = self.features(x)
         x = self.avgpool(x)
         x = torch.flatten(x, 1)
