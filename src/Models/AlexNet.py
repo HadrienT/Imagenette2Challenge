@@ -26,7 +26,7 @@ import torch.nn as nn
 #         return x
         
 class Model(nn.Module):
-    def __init__(self, num_classes=1000):
+    def __init__(self, num_classes:int=1000) -> None:
         super(Model, self).__init__()
         self.features = nn.Sequential(
             nn.Conv2d(3, 64, kernel_size=11, stride=4, padding=2),
@@ -54,7 +54,7 @@ class Model(nn.Module):
             nn.Linear(4096, num_classes),
         )
 
-    def forward(self, x):
+    def forward(self, x:torch.Tensor) -> torch.Tensor:
         x = self.features(x)
         x = self.avgpool(x)
         x = torch.flatten(x, 1)

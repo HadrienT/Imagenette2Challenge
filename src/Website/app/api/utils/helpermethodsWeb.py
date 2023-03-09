@@ -17,7 +17,7 @@ def infer() -> Any:
     # Get the result from the Queue
     return queue.get()
 
-def empty_folder(dir_path):
+def empty_folder(dir_path:str) -> None:
     # loop through the files in the directory and remove them
     for filename in os.listdir(dir_path):
         file_path = os.path.join(dir_path, filename)

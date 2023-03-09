@@ -143,7 +143,7 @@ def main() -> None:
         end_epoch = time.time()  
             
         # Compute average training loss and accuracy
-        train_loss /= float(len(train_loader.dataset)) # type: ignore
+        train_loss /= float(len(train_loader))
         train_acc = train_correct / train_total
             
         # Validation
@@ -174,7 +174,7 @@ def main() -> None:
         measures_file.write(measures)
             
         # Compute average validation loss and accuracy
-        val_loss /= float(len(val_loader.dataset)) # type: ignore
+        val_loss /= float(len(val_loader)) 
         val_acc = val_correct / val_total
             
         # log metrics

@@ -2,7 +2,7 @@ import os
 import PIL.Image as Image
 import argparse
 
-def main():
+def main() -> None:
   parser = argparse.ArgumentParser(description='Build paths files')
   parser.add_argument('--transformed',type=bool, action=argparse.BooleanOptionalAction,help='Make paths for transformed or raw images')
   
@@ -64,4 +64,4 @@ def main():
                 
     f.close()
 if __name__ == '__main__':
-    main()
+  main()

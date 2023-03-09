@@ -1,6 +1,6 @@
 import os
 
-def create_directory_structure(project_name):
+def create_directory_structure(project_name : str) -> None:
     project_directory = os.path.join(os.getcwd(), project_name)
 
     # create project directory

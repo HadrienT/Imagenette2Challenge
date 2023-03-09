@@ -5,7 +5,7 @@ from Models import LeNet_5
 import multiprocessing
 from torchvision import transforms
 
-def main(queue: multiprocessing.Queue = multiprocessing.Queue()) -> None:
+def main(queue: multiprocessing.Queue = multiprocessing.Queue()) -> None: # type: ignore
     labels = ['tench', 'English springer', 'cassette player', 'chain saw', 'church', 'French horn', 'garbage truck', 'gas pump', 'golf ball', 'parachute']
     print('Infering...')
     model = LeNet_5.Model(10)

@@ -3,17 +3,18 @@ from tkinter import messagebox
 from tkinter import ttk
 import subprocess
 import atexit
-import os 
+import os
+from typing import Optional 
 
 SSD = False
 base_path = "E:\\ML\\" if SSD else ".\\"
 
 class App(tk.Frame):
-    def __init__(self, master=None):
+    def __init__(self, master:tk.Tk) -> None:
         super().__init__(master)
         self.master = master
-        self.master.title("GUI Launcher") # type: ignore
-        self.master.geometry("600x300") # type: ignore
+        self.master.title("GUI Launcher") 
+        self.master.geometry("600x300") 
         self.pack(pady=20)
         
         # Model parameter
@@ -93,16 +94,16 @@ class App(tk.Frame):
         self.run_button.grid(row=7, column=1, pady=20)
         
         # Create subprocess
-        self.proc = None
+        self.proc: Optional[subprocess.Popen[bytes]] = None
 
         # Register kill_subprocess function to be called when program is closing down
         atexit.register(self.kill_subprocess)
             
-    def kill_subprocess(self):
+    def kill_subprocess(self) -> None:
         if self.proc and self.proc.poll() is None:
             self.proc.terminate()
 
-    def run(self):
+    def run(self) -> None:
         # Get parameter values
         model = self.model_var.get()
         epochs = self.epochs_var.get()
@@ -130,11 +131,15 @@ class App(tk.Frame):
         cmd += ["--figures"] if figures else ["--no-figures"]
         cmd += ["--transformed"] if transformed else ["--no-transformed"]
         self.proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
-
-        output = self.proc.communicate()[0]
-        print(output.decode('utf-8'))
+        if self.proc.poll() is not None:
+        # subprocess was created successfully
+            output = self.proc.communicate()[0]
+            print(output.decode('utf-8'))
+        else:
+        # subprocess creation failed
+            print("Error creating subprocess")
     
-def main():
+def main() -> None:
     root = tk.Tk()
     app = App(master=root)
     app.mainloop()

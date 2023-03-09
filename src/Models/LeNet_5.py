@@ -3,7 +3,7 @@ import torch
 
 
 class Model(nn.Module):
-    def __init__(self, num_class) -> None:
+    def __init__(self, num_class:int) -> None:
         super(Model, self).__init__()
         hidden_size_1 = 6
         hidden_size_2 = 16
@@ -16,7 +16,7 @@ class Model(nn.Module):
         self.fc3 = nn.Linear(in_features=84, out_features=num_class)
 
 
-    def forward(self, x):
+    def forward(self, x:torch.Tensor)->torch.Tensor:
         
         x = self.conv1(x)
         x = torch.tanh(x)
