@@ -4,7 +4,7 @@ import argparse
 import pandas as pd
 
 # plot metrics over time
-def plot_metrics(losses_training:list,accuracies_training:list,losses_validation:list,accuracies_validation:list,args:argparse.Namespace) -> None:
+def plot_metrics(losses_training:list[float],accuracies_training:list[float],losses_validation:list[float],accuracies_validation:list[float],args:argparse.Namespace) -> None:
     abscisse = np.arange(1,args.epochs+1)
     _,ax = plt.subplots(nrows=1,ncols=2,figsize=(15,5),tight_layout=True)
     ax = ax.flatten()

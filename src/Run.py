@@ -11,7 +11,7 @@ from utils.Visualization import plot_metrics, plot_time_measures
 from utils.Header import print_header
 import utils.helpermethods as helpermethods
 
-def main()->None: 
+def main() -> None: 
     NUMBER_CLASSES = 10
     date = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     
@@ -90,9 +90,9 @@ def main()->None:
 
     for epoch in range(args.epochs):
         # Training
-        train_loss = 0
-        train_correct = 0
-        train_total = 0
+        train_loss = 0.0
+        train_correct = 0.0
+        train_total = 0.0
             
         # Set model to training mode
         model.train()
@@ -128,7 +128,7 @@ def main()->None:
             train_correct += train_accuracy
             train_total += inputs.size(0)
                 
-            start_save = 0
+            start_save = 0.0
             if loss.item() < best_loss:
                 start_save = time.time()
                 best_loss = loss.item()
@@ -139,17 +139,17 @@ def main()->None:
                     "optimizer_state_dict": optimizer.state_dict(),
                     "best_loss": best_loss
                 }, checkpoint_path)
-            end_save = 0 if start_save == 0 else time.time()
+            end_save = 0.0 if start_save == 0 else time.time()
         end_epoch = time.time()  
             
         # Compute average training loss and accuracy
-        train_loss /= len(train_loader.dataset)
+        train_loss /= float(len(train_loader.dataset)) # type: ignore
         train_acc = train_correct / train_total
             
         # Validation
-        val_loss = 0
-        val_correct = 0
-        val_total = 0
+        val_loss = 0.0
+        val_correct = 0.0
+        val_total = 0.0
             
         # Set model to evaluation mode
         model.eval()
@@ -174,7 +174,7 @@ def main()->None:
         measures_file.write(measures)
             
         # Compute average validation loss and accuracy
-        val_loss /= len(val_loader.dataset)
+        val_loss /= float(len(val_loader.dataset)) # type: ignore
         val_acc = val_correct / val_total
             
         # log metrics
@@ -182,7 +182,7 @@ def main()->None:
         accuracies_training.append(train_acc)
             
         losses_validation.append(val_loss)
-        accuracies_validation.append(val_accuracy)
+        accuracies_validation.append(val_acc)
         print(f"Epoch [{epoch+1}/{args.epochs}]: Trainign loss = {train_loss:.3f}, Training accuracy = {train_acc:.3f}")
         print(f"Epoch [{epoch+1}/{args.epochs}]: Validation loss = {val_loss:.3f}, Validation accuracy = {val_acc:.3f}")
         

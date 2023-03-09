@@ -12,8 +12,8 @@ class App(tk.Frame):
     def __init__(self, master=None):
         super().__init__(master)
         self.master = master
-        self.master.title("GUI Launcher")
-        self.master.geometry("800x400")
+        self.master.title("GUI Launcher") # type: ignore
+        self.master.geometry("600x300") # type: ignore
         self.pack(pady=20)
         
         # Model parameter

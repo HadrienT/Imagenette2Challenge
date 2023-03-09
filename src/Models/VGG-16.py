@@ -22,8 +22,8 @@ class Model(nn.Module):
         
         for _ in range(3):
             x = torch.relu(self.conv1_bloc2(x))
-            x = torch.relu(self.conv(x))
-            x = torch.relu(self.conv(x))
+            x = torch.relu(self.conv2_bloc2(x))
+            x = torch.relu(self.conv3_bloc2(x))
             x = self.pool(x)
             
         x = x.flatten(start_dim=1)

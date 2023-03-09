@@ -5,21 +5,22 @@ from fastapi.staticfiles import StaticFiles
 import Website.app.api.utils.helpermethodsWeb as helpermethodsWeb
 from fastapi.responses import RedirectResponse
 from typing import List
+from fastapi import Header
 
 app = FastAPI()
-templates = Jinja2Templates(directory="./Website/app/api/templates")
-app.mount("/images", StaticFiles(directory="./Website/Temp"), name="images")
+templates = Jinja2Templates(directory="./src/Website/app/api/templates")
+app.mount("/images", StaticFiles(directory="./src/Website/Temp"), name="images")
 
 
 @app.get("/")
-async def main(request : Request = None):
+async def main(request : Request = Header(None)):
     return templates.TemplateResponse("index.html", context={"request":request})
 
 @app.post("/upload")
 async def upload_images(images: List[UploadFile] = File(...)):
     for image in images:
         contents = await image.read()
-        path = f"./Website/Temp/{image.filename}"
+        path = f"./src/Website/Temp/{image.filename}"
         with open(path, "wb") as f:
             f.write(contents)
         f.close()
@@ -33,8 +34,8 @@ async def predict():
     return {"results": results}
 
 @app.get("/images-grid")
-async def get_image_grid(request : Request = None):
-    path = f".\\Website\\Temp"
+async def get_image_grid(request : Request = Header(None)):
+    path = f".\\src\\Website\\Temp"
     image_paths = os.listdir(path)
     image_paths = ['images/' + path for path in image_paths]
     if len(image_paths) != 0:
@@ -46,7 +47,7 @@ async def get_image_grid(request : Request = None):
 
 @app.delete("/delete")
 async def onload():
-    path = f".\\Website\\Temp"
+    path = f".\\src\\Website\\Temp"
     helpermethodsWeb.empty_folder(path)
     return {"message": "Deleted all images"}
 

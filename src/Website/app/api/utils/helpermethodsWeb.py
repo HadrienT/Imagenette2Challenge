@@ -1,13 +1,11 @@
 import multiprocessing
 import os
-import sys
-
-# Add the parent directory of the current file (i.e., root directory) to the Python path
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..\\..\\..\\..')))
 import Infer
-def infer()->list:
+from typing import Any
+
+def infer() -> Any:
     # Create a multiprocessing Queue object
-    queue = multiprocessing.Queue()
+    queue : multiprocessing.Queue[Any] = multiprocessing.Queue()
     
     # Start the second process
     p2 = multiprocessing.Process(target=Infer.main, args=(queue,))

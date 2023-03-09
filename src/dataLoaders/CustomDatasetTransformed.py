@@ -1,7 +1,8 @@
-import torch.utils.data as data
 import torch 
+from typing import Any
+from torch.utils.data import Dataset
 
-class CustomDataset(data.Dataset):
+class CustomDataset(Dataset[Any]):
     def __init__(self, images, labels, transform=None):
         self.images = images
         self.labels = labels

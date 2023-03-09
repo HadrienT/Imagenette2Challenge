@@ -6,6 +6,7 @@ import multiprocessing
 import types
 import stat
 import os 
+from typing import Any
 
 def parse_arguments() -> argparse.Namespace:
    # Define the argument parser
@@ -20,28 +21,28 @@ def parse_arguments() -> argparse.Namespace:
     parser.add_argument('--metric' , type=int, default=1, help='Number of most probable classes to correctly classify (default: 1)')
     return parser.parse_args()
 
-def load_dataset(CustomDataset_module:types.ModuleType,file:str, transform:transforms, args:argparse.Namespace) -> DataLoader:
+def load_dataset(CustomDataset_module:types.ModuleType,file:str, transform:transforms, args:argparse.Namespace) -> DataLoader[Any]:
     labels = ['tench', 'English springer', 'cassette player', 'chain saw', 'church', 'French horn', 'garbage truck', 'gas pump', 'golf ball', 'parachute']
     label_to_index = {label: index for index, label in enumerate(labels)}
     
     with open(file, 'r') as f:
         image_paths = [] # List of image file paths
-        labels = [] # List of labels corresponding to each image
+        classes = [] # List of labels corresponding to each image
         for line in f:
             image_paths.append(line.split(',')[0])
-            labels.append(label_to_index.get(line.split(',')[1].replace('\n', ''))) # Remove the newline character from the label and convert it to an integer
+            classes.append(label_to_index.get(line.split(',')[1].replace('\n', ''))) # Remove the newline character from the label and convert it to an integer
     f.close()   
     
     # Create a dataloader to load the data in batches
-    data_training = CustomDataset_module.CustomDataset(image_paths, labels, transform)
+    data_training = CustomDataset_module.CustomDataset(image_paths, classes, transform)
     dataloader_training = torch.utils.data.DataLoader(data_training, batch_size=args.batch_size, shuffle=True,num_workers=6)
 
     return dataloader_training
     
-def compute_accuracy(output:torch.Tensor, labels:torch.Tensor,args:argparse.Namespace) -> int:
+def compute_accuracy(output:torch.Tensor, labels:torch.Tensor,args:argparse.Namespace) -> float:
     _, predicted = torch.topk(output, k=args.metric, dim=1)
     correct = (predicted == labels.view(-1, 1)).sum().item()
-    return correct
+    return float(correct)
        
 def make_folder(path:str) -> None:
 
@@ -58,5 +59,5 @@ def make_folder(path:str) -> None:
         except OSError as e:
             raise OSError(f"Failed to create measures folder: {e}")
         
-def send_result(queue:multiprocessing.Queue, result:list) -> None:
+def send_result(queue:multiprocessing.Queue, result:list[int]) -> None:
     queue.put(result)

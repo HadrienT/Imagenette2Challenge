@@ -1,8 +1,8 @@
-import torch.utils.data as data
 import PIL.Image as Image
 import torch 
-
-class CustomDataset(data.Dataset):
+from torch.utils.data import Dataset
+from typing import Any
+class CustomDataset(Dataset[Any]):
     def __init__(self, image_paths, labels, transform=None):
         self.image_paths = image_paths
         self.labels = labels
