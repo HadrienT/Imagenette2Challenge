@@ -23,7 +23,7 @@ def parse_arguments() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def load_dataset(CustomDataset_module: types.ModuleType, file: str, transform: transforms, args: argparse.Namespace) -> DataLoader[Any]:
+def get_paths_and_labels(file: str) -> tuple[list[str], list[int]]:
     labels = ['tench', 'English springer', 'cassette player', 'chain saw', 'church', 'French horn', 'garbage truck', 'gas pump', 'golf ball', 'parachute']
     label_to_index = {label: index for index, label in enumerate(labels)}
 
@@ -33,8 +33,11 @@ def load_dataset(CustomDataset_module: types.ModuleType, file: str, transform: t
         for line in f:
             image_paths.append(line.split(',')[0])
             classes.append(label_to_index.get(line.split(',')[1].replace('\n', '')))  # Remove the newline character from the label and convert it to an integer
-    f.close()
+    return image_paths, classes
 
+
+def load_dataset(CustomDataset_module: types.ModuleType, file: str, transform: transforms, args: argparse.Namespace) -> DataLoader[Any]:
+    image_paths, classes = get_paths_and_labels(file)
     # Create a dataloader to load the data in batches
     data_training = CustomDataset_module.CustomDataset(image_paths, classes, transform)
     dataloader_training = torch.utils.data.DataLoader(data_training, batch_size=args.batch_size, shuffle=True, num_workers=6)
@@ -49,11 +52,6 @@ def compute_accuracy(output: torch.Tensor, labels: torch.Tensor, args: argparse.
 
 
 def make_folder(path: str) -> None:
-
-    # Check if the user has write permission for the parent directory
-    parent_dir = os.path.dirname(path)
-    if not os.access(parent_dir, os.W_OK):
-        raise PermissionError(f"You do not have permission to write to {parent_dir}")
 
     # Check if the measures folder exists, and create it if necessary
     if not os.path.isdir(path):

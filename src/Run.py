@@ -58,7 +58,6 @@ def main() -> None:
         transforms.Resize((256, 256)),
         transforms.ToTensor(),
         transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-        # transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),  # Normalize tensor values to range [-1, 1]
     ])
     # Load the datasets
     print('Loading the dataset...')
@@ -144,7 +143,7 @@ def main() -> None:
         end_epoch = time.time()
 
         # Compute average training loss and accuracy
-        train_loss /= float(len(train_loader))
+        train_loss /= float(len(train_loader.dataset))
         train_acc = train_correct / train_total
 
         # Validation
@@ -175,7 +174,7 @@ def main() -> None:
         measures_file.write(measures)
 
         # Compute average validation loss and accuracy
-        val_loss /= float(len(val_loader))
+        val_loss /= float(len(val_loader.dataset))
         val_acc = val_correct / val_total
 
         # log metrics
@@ -184,7 +183,7 @@ def main() -> None:
 
         losses_validation.append(val_loss)
         accuracies_validation.append(val_acc)
-        print(f"Epoch [{epoch+1}/{args.epochs}]: Trainign loss = {train_loss:.3f}, Training accuracy = {train_acc:.3f}")
+        print(f"Epoch [{epoch+1}/{args.epochs}]: Training loss = {train_loss:.3f}, Training accuracy = {train_acc:.3f}")
         print(f"Epoch [{epoch+1}/{args.epochs}]: Validation loss = {val_loss:.3f}, Validation accuracy = {val_acc:.3f}")
 
     measures_file.close()

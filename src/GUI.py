@@ -133,13 +133,13 @@ class App(tk.Frame):
         cmd += ["--figures"] if figures else ["--no-figures"]
         cmd += ["--transformed"] if transformed else ["--no-transformed"]
         self.proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
-        if self.proc.poll() is not None:
-            # subprocess was created successfully
+        if self.proc.wait() == 0:
+            # subprocess completed successfully
             output = self.proc.communicate()[0]
             print(output.decode('utf-8'))
         else:
-            # subprocess creation failed
-            print("Error creating subprocess")
+            # subprocess creation or execution failed
+            print("Error creating or running subprocess")
 
 
 def main() -> None:
