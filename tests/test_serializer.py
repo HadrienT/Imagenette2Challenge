@@ -43,6 +43,7 @@ def test_image_to_tensor() -> None:
         transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
     ])
     paths = os.listdir(root)
+    assert len(paths) > 0
     nb_color_images = 0
     with tempfile.TemporaryDirectory() as tmpdir:
         for path in paths:
