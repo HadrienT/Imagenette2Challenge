@@ -18,3 +18,9 @@ Website/Temp/
 src/Website/Temp/
 
 src/Imagenette2Challenge.egg-info/
+
+.coverage
+
+report.html
+
+assets/
