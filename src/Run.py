@@ -19,12 +19,10 @@ def main() -> None:
     # Parse the arguments
     args = helpermethods.parse_arguments()
 
-    SSD = True
-    base_path = 'E:\\ML\\' if SSD else '.\\'
+    base_path = 'E:\\ML\\'
     measures_folder_path = base_path + f"Measures\\{args.model}"
     checkpoint_path = base_path + 'Checkpoints\\' + args.checkpoint + '.pt'
-    file_training = base_path + 'Datasets\\imagenette2\\train.txt'
-    file_validation = base_path + 'Datasets\\imagenette2\\val.txt'
+
     # check if the folder exists
     helpermethods.make_folder(measures_folder_path)
 
@@ -33,15 +31,18 @@ def main() -> None:
     measures_file.write("num_epoch,image (ms),criterion (ms),optimizer (ms),accuracy (ms),checkpoint (ms),epoch (s)\n")
     # Define the model
     model = importlib.import_module('Models.' + args.model).Model(NUMBER_CLASSES)
-
     # count the number of trainable parameters
     num_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
     num_params = format(num_params, ',d').replace(',', '.')
 
     if args.transformed:
         CustomDataset_module = importlib.import_module('dataLoaders.CustomDatasetTransformed')
+        file_training = base_path + 'Datasets\\imagenette2\\transformed\\train.txt'
+        file_validation = base_path + 'Datasets\\imagenette2\\transformed\\val.txt'
     else:
         CustomDataset_module = importlib.import_module('dataLoaders.CustomDatasetRaw')
+        file_training = base_path + 'Datasets\\imagenette2\\train.txt'
+        file_validation = base_path + 'Datasets\\imagenette2\\val.txt'
     # Check if GPU is available
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model = model.to(device)
@@ -143,7 +144,7 @@ def main() -> None:
         end_epoch = time.time()
 
         # Compute average training loss and accuracy
-        train_loss /= float(len(train_loader.dataset))
+        train_loss /= float(len(train_loader.dataset))  # type: ignore
         train_acc = train_correct / train_total
 
         # Validation
@@ -174,7 +175,7 @@ def main() -> None:
         measures_file.write(measures)
 
         # Compute average validation loss and accuracy
-        val_loss /= float(len(val_loader.dataset))
+        val_loss /= float(len(val_loader.dataset))  # type: ignore
         val_acc = val_correct / val_total
 
         # log metrics

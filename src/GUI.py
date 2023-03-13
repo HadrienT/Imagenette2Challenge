@@ -6,9 +6,6 @@ import atexit
 import os
 from typing import Optional
 
-SSD = False
-base_path = "E:\\ML\\" if SSD else ".\\"
-
 
 class App(tk.Frame):
     def __init__(self, master: tk.Tk) -> None:
@@ -49,7 +46,7 @@ class App(tk.Frame):
         self.batch_size_entry.grid(row=2, column=1)
 
         # Checkpoint parameter
-        checkpoints = os.listdir(base_path + 'Checkpoints\\')
+        checkpoints = os.listdir('E:\\ML\\Checkpoints\\')
         checkpoints = [checkpoint.split('.pt')[0] for checkpoint in checkpoints if checkpoint.endswith('.pt')]
 
         self.checkpoint_label = tk.Label(self, text="Checkpoint:")
@@ -115,9 +112,14 @@ class App(tk.Frame):
 
         transformed_message = "Transformed" if transformed else "Raw"
         # Show parameter values
-        message = f"Model: {model}\nEpochs: {epochs}\nBatch size: {batch_size}\n \
-        Checkpoint: {checkpoint}\nPotential targets: {potential_targets} \n \
-        Figures: {figures}\nTransformed: {transformed_message}"
+        message = (f"Model: {model}\n"
+                   f"Epochs: {epochs}\n"
+                   f"Batch size: {batch_size}\n"
+                   f"Checkpoint: {checkpoint}\n"
+                   f"Potential targets: {potential_targets}\n"
+                   f"Figures: {figures}\n"
+                   f"Transformed: {transformed_message}"
+                   )
         messagebox.showinfo("Parameter values", message)
         # TODO: Call Run.py with the selected parameters
         if self.proc and self.proc.poll() is None:

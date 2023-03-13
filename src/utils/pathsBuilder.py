@@ -6,7 +6,7 @@ import argparse
 def valid_image(path: str) -> bool:
     try:
         with Image.open(path) as img:
-            return img.format == 'JPEG' and img.mode == 'RGB'
+            return img.format == 'JPEG' and img.mode == 'RGB'  # type: ignore
     except (IOError, SyntaxError):
         return False
 

@@ -61,7 +61,7 @@ def convert_dataset(root_dir: str) -> None:
                 image_to_tensor(image_path, target_name, transform)
 
 
-def main():
+def main() -> None:
     root = "E:\\ML\\Datasets\\imagenette2"
     make_hierarchy(root)
     convert_dataset(root)

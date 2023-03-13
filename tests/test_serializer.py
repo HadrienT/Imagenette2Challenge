@@ -44,7 +44,7 @@ def test_image_to_tensor() -> None:
     ])
     paths = os.listdir(root)
     nb_color_images = 0
-    with tempfile.TemporaryDirectory(dir=root) as tmpdir:
+    with tempfile.TemporaryDirectory() as tmpdir:
         for path in paths:
             if Image.open(os.path.join(root, path)).mode == "RGB":
                 nb_color_images += 1

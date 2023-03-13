@@ -1,10 +1,13 @@
+import os
+import tempfile
+
 import pytest
 import torch
 from torch.utils.data import DataLoader
 from torchvision import transforms
+import PIL.Image as Image
 
-from dataLoaders import CustomDatasetRaw
-from dataLoaders import CustomDatasetTransformed
+from dataLoaders import CustomDatasetRaw, CustomDatasetTransformed, InferLoader
 from utils import helpermethods as helpermethods
 
 
@@ -70,3 +73,28 @@ def test_custom_dataset_transformed(sample_data_transformed):
     assert batch_data.shape == (2, 3, 256, 256)
     assert isinstance(batch_labels, torch.Tensor)
     assert batch_labels.shape == (2,)
+
+
+def test_infer_loader():
+    # Generate sample data
+    with tempfile.TemporaryDirectory() as tempdir:
+        img1 = Image.new("RGB", (32, 32), color="red")
+        img2 = Image.new("RGB", (32, 32), color="blue")
+        img3 = Image.new("RGB", (32, 32), color="green")
+        img1.save(os.path.join(tempdir, "1.jpg"))
+        img2.save(os.path.join(tempdir, "2.jpg"))
+        img3.save(os.path.join(tempdir, "3.jpg"))
+        transform = transforms.Compose([transforms.Resize((64, 64)), transforms.ToTensor()])
+        dataset = InferLoader.CustomDataset(tempdir, transform=transform)
+
+        assert len(dataset) == 3
+        # Test the first item in the dataset
+        data = dataset[0]
+        assert isinstance(data, torch.Tensor)
+        assert data.shape == (3, 64, 64)
+
+        # Test the dataset with a DataLoader
+        dataloader = DataLoader(dataset, batch_size=2)
+        batch_data = next(iter(dataloader))
+        assert isinstance(batch_data, torch.Tensor)
+        assert batch_data.shape == (2, 3, 64, 64)

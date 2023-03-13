@@ -31,8 +31,11 @@ def get_paths_and_labels(file: str) -> tuple[list[str], list[int]]:
         image_paths = []  # List of image file paths
         classes = []  # List of labels corresponding to each image
         for line in f:
-            image_paths.append(line.split(',')[0])
-            classes.append(label_to_index.get(line.split(',')[1].replace('\n', '')))  # Remove the newline character from the label and convert it to an integer
+            target = label_to_index.get(line.split(',')[1].replace('\n', ''))
+            if target is not None:
+                image_paths.append(line.split(',')[0])
+                # Remove the newline character from the label and convert it to an integer
+                classes.append(target)
     return image_paths, classes
 
 

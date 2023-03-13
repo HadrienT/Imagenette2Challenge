@@ -3,7 +3,7 @@ import os
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 import Website.app.api.utils.helpermethodsWeb as helpermethodsWeb
-from fastapi.responses import RedirectResponse
+from fastapi.responses import RedirectResponse, HTMLResponse
 from typing import List
 from fastapi import Header
 from typing import Any
@@ -16,6 +16,11 @@ app.mount("/images", StaticFiles(directory="./src/Website/Temp"), name="images")
 @app.get("/")
 async def main(request: Request = Header(None)) -> Any:
     return templates.TemplateResponse("index.html", context={"request": request})
+
+
+@app.get("/favicon.ico", include_in_schema=False)  # This is to prevent the favicon.ico error
+async def favicon() -> HTMLResponse:
+    return HTMLResponse(content="", status_code=204)
 
 
 @app.post("/upload")
