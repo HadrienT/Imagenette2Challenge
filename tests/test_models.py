@@ -1,6 +1,5 @@
 import importlib
 import argparse
-import time
 
 import torch
 import torchvision.transforms as transforms
@@ -41,18 +40,23 @@ def test_LeNet5() -> None:
     optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
 
     inputs, labels = next(iter(train_loader))
+    losses = []
 
-    for epoch in tqdm(range(args.epochs), desc="Training", leave=True):
-        # Set model to training mode
-        model.train()
-        # Move the data to the GPU if available
-        inputs, labels = inputs.to(device), labels.to(device)
-        outputs = model(inputs)
-        loss = criterion(outputs, labels)
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
-        print(f"Epoch [{epoch+1}/{args.epochs}]: Training loss = {loss:.3f}")
+    with tqdm(total=args.epochs, desc='Training', leave=True) as pbar:
+        for epoch in range(args.epochs):
+            # Set model to training mode
+            model.train()
+            # Move the data to the GPU if available
+            inputs, labels = inputs.to(device), labels.to(device)
+            outputs = model(inputs)
+            loss = criterion(outputs, labels)
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+            losses.append(loss.item())
+            pbar.update(1)
+            pbar.set_postfix({'Loss': loss.item()})
+        pbar.set_description(f"Done training {args.epochs} epochs")
 
 
 if __name__ == '__main__':

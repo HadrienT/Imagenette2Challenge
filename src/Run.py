@@ -100,47 +100,52 @@ def main() -> None:
 
         # Use the dataloader to access the data in batches
         start_epoch = time.time()
-        for inputs, labels in tqdm(train_loader, desc='Training', leave=True):
-            # Move the data to the GPU if available
-            inputs, labels = inputs.to(device), labels.to(device)
+        with tqdm(total=len(train_loader), desc='Training', leave=True) as pbar:
+            for inputs, labels in train_loader:
+                # Move the data to the GPU if available
+                inputs, labels = inputs.to(device), labels.to(device)
 
-            start_train = time.time()
-            outputs = model(inputs)
-            end_train = time.time()
+                start_train = time.time()
+                outputs = model(inputs)
+                end_train = time.time()
 
-            start_crit = time.time()
-            loss = criterion(outputs, labels)
-            end_crit = time.time()
+                start_crit = time.time()
+                loss = criterion(outputs, labels)
+                end_crit = time.time()
 
-            # Backward pass and optimization
-            start_opti = time.time()
-            optimizer.zero_grad()
-            loss.backward()
-            optimizer.step()
-            end_opti = time.time()
+                # Backward pass and optimization
+                start_opti = time.time()
+                optimizer.zero_grad()
+                loss.backward()
+                optimizer.step()
+                end_opti = time.time()
 
-            # compute accuracy
-            start_acc = time.time()
-            train_accuracy = helpermethods.compute_accuracy(outputs, labels, args)
-            end_acc = time.time()
+                # compute accuracy
+                start_acc = time.time()
+                train_accuracy = helpermethods.compute_accuracy(outputs, labels, args)
+                end_acc = time.time()
 
-            # update metrics
-            train_loss += loss.item() * inputs.size(0)
-            train_correct += train_accuracy
-            train_total += inputs.size(0)
+                # update metrics
+                train_loss += loss.item() * inputs.size(0)
+                train_correct += train_accuracy
+                train_total += inputs.size(0)
 
-            start_save = 0.0
-            if loss.item() < best_loss:
-                start_save = time.time()
-                best_loss = loss.item()
+                start_save = 0.0
+                if loss.item() < best_loss:
+                    start_save = time.time()
+                    best_loss = loss.item()
 
-                # Save the best weights to file
-                torch.save({
-                    "model_state_dict": model.state_dict(),
-                    "optimizer_state_dict": optimizer.state_dict(),
-                    "best_loss": best_loss
-                }, checkpoint_path)
-            end_save = 0.0 if start_save == 0 else time.time()
+                    # Save the best weights to file
+                    torch.save({
+                        "model_state_dict": model.state_dict(),
+                        "optimizer_state_dict": optimizer.state_dict(),
+                        "best_loss": best_loss
+                    }, checkpoint_path)
+                end_save = 0.0 if start_save == 0 else time.time()
+                pbar.update(1)
+                pbar.set_postfix({'Loss': loss.item()})
+            pbar.set_description(f"Done training epoch [{epoch}/{args.epochs}]")
+
         end_epoch = time.time()
 
         # Compute average training loss and accuracy
@@ -156,19 +161,23 @@ def main() -> None:
         model.eval()
 
         with torch.no_grad():
-            for inputs, labels in tqdm(val_loader, desc='Validation', leave=True):
-                # Move the data to the GPU if available
-                inputs, labels = inputs.to(device), labels.to(device)
-                outputs = model(inputs)
-                loss = criterion(outputs, labels)
+            with tqdm(total=len(val_loader), desc='Validating', leave=True) as pbar:
+                for inputs, labels in val_loader:
+                    # Move the data to the GPU if available
+                    inputs, labels = inputs.to(device), labels.to(device)
+                    outputs = model(inputs)
+                    loss = criterion(outputs, labels)
 
-                # Calculate validation loss and accuracy
-                val_accuracy = helpermethods.compute_accuracy(outputs, labels, args)
+                    # Calculate validation loss and accuracy
+                    val_accuracy = helpermethods.compute_accuracy(outputs, labels, args)
 
-                # update metrics
-                val_correct += val_accuracy
-                val_loss += loss.item() * inputs.size(0)
-                val_total += inputs.size(0)
+                    # update metrics
+                    val_correct += val_accuracy
+                    val_loss += loss.item() * inputs.size(0)
+                    val_total += inputs.size(0)
+                    pbar.update(1)
+                    pbar.set_postfix({'Loss': loss.item()})
+                pbar.set_description(f"Done validating epoch [{epoch}/{args.epochs}]")
 
         measures = f'{epoch},{end_train-start_train:.3f},{end_crit-start_crit:.3f},{end_opti-start_opti:.3f}, \
             {end_acc-start_acc:.3f},{end_save-start_save:.3f},{end_epoch-start_epoch:.3f}\n'
