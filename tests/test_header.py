@@ -4,7 +4,7 @@ from datetime import datetime
 from utils import Header
 
 
-def test_print_header():
+def test_print_header() -> None:
     args = argparse.Namespace(model='resnet', epochs=10, batch_size=32, metric='accuracy',
                               transformed=True, figures=False)
     params = {

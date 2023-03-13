@@ -193,6 +193,7 @@ def main() -> None:
 
         losses_validation.append(val_loss)
         accuracies_validation.append(val_acc)
+        print(f"Best loss : {best_loss}")
         print(f"Epoch [{epoch+1}/{args.epochs}]: Training loss = {train_loss:.3f}, Training accuracy = {train_acc:.3f}")
         print(f"Epoch [{epoch+1}/{args.epochs}]: Validation loss = {val_loss:.3f}, Validation accuracy = {val_acc:.3f}")
 

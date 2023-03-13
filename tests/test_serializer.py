@@ -19,7 +19,7 @@ def test_get_class_folders() -> None:
 
 def test_make_hierarchy(monkeypatch: pytest.MonkeyPatch) -> None:
 
-    def mock_get_class_folders(root) -> list[str]:
+    def mock_get_class_folders(root: str) -> list[str]:
         return ['n01440764', 'n02102040', 'n02979186', 'n03000684', 'n03028079', 'n03394916', 'n03417042', 'n03425413', 'n03445777', 'n03888257']
 
     monkeypatch.setattr(SerializeDataset, 'get_class_folders', mock_get_class_folders)
@@ -27,7 +27,7 @@ def test_make_hierarchy(monkeypatch: pytest.MonkeyPatch) -> None:
         SerializeDataset.make_hierarchy(tempdir)
         train_dir = os.path.join(tempdir, 'transformed', 'train')
         val_dir = os.path.join(tempdir, 'transformed', 'val')
-        folders = mock_get_class_folders(None)
+        folders = mock_get_class_folders('')
         for folder in folders:
             train_folder = os.path.join(train_dir, folder)
             val_folder = os.path.join(val_dir, folder)

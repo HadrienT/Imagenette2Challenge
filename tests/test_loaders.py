@@ -12,7 +12,7 @@ from utils import helpermethods as helpermethods
 
 
 @pytest.fixture(scope="module")
-def sample_data_raw():
+def sample_data_raw() -> tuple[list[str], list[int], transforms.Compose]:
     # Generate sample data
     file = "E:\\ML\\Datasets\\imagenette2\\train.txt"
     image_paths, labels = helpermethods.get_paths_and_labels(file)
@@ -20,7 +20,7 @@ def sample_data_raw():
     return image_paths, labels, transform
 
 
-def test_custom_dataset_raw(sample_data_raw):
+def test_custom_dataset_raw(sample_data_raw: tuple[list[str], list[int], transforms.Compose]) -> None:
     # Test the CustomDataset class
     image_paths, labels, transform = sample_data_raw
     dataset = CustomDatasetRaw.CustomDataset(image_paths, labels, transform=transform)
@@ -44,7 +44,7 @@ def test_custom_dataset_raw(sample_data_raw):
 
 
 @pytest.fixture(scope="module")
-def sample_data_transformed():
+def sample_data_transformed() -> tuple[list[str], list[int], transforms.Compose]:
     # Generate sample data
     file = "E:\\ML\\Datasets\\imagenette2\\transformed\\train.txt"
     image_paths, labels = helpermethods.get_paths_and_labels(file)
@@ -52,7 +52,7 @@ def sample_data_transformed():
     return image_paths, labels, transform
 
 
-def test_custom_dataset_transformed(sample_data_transformed):
+def test_custom_dataset_transformed(sample_data_transformed: tuple[list[str], list[int], transforms.Compose]) -> None:
     # Test the CustomDataset class
     image_paths, labels, transform = sample_data_transformed
     dataset = CustomDatasetTransformed.CustomDataset(image_paths, labels, transform=transform)
@@ -75,7 +75,7 @@ def test_custom_dataset_transformed(sample_data_transformed):
     assert batch_labels.shape == (2,)
 
 
-def test_infer_loader():
+def test_infer_loader() -> None:
     # Generate sample data
     with tempfile.TemporaryDirectory() as tempdir:
         img1 = Image.new("RGB", (32, 32), color="red")

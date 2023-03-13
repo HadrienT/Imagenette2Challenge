@@ -162,13 +162,13 @@ def test_make_folder_with_existing_file() -> None:
     test_dir.cleanup()
 
 
-def processMock(queue: multiprocessing.Queue) -> None:
+def processMock(queue: multiprocessing.Queue) -> None:  # type: ignore
     result = [1, 2, 3]
     queue.put(result)
 
 
 def test_send_result() -> None:
-    queue = multiprocessing.Queue()
+    queue = multiprocessing.Queue()  # type: ignore
     p = multiprocessing.Process(target=processMock, args=(queue,))
     p.start()
     p.join()

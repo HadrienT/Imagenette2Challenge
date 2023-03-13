@@ -4,15 +4,27 @@ import argparse
 import torch
 import torchvision.transforms as transforms
 import torch.nn as nn
-from tqdm import tqdm
 
 import utils.helpermethods as helpermethods
-from Models import LeNet_5 as nnModel
 
 
-def test_LeNet5() -> None:
+def test_LeNet() -> None:
+    model_module = 'Models.LeNet_5'
+    threshold_passed, loss = train(model_module)
+    assert threshold_passed, f'Loss is {loss}'
+
+
+def test_AlexNet() -> None:
+    model_module = 'Models.AlexNet'
+    threshold_passed, loss = train(model_module)
+    assert threshold_passed, f'Loss is {loss}'
+
+
+def train(model_module: str) -> tuple[bool, float]:
+    threshold = 0.01
+    module = importlib.import_module(model_module)
     NUMBER_CLASSES = 10
-    model = nnModel.Model(NUMBER_CLASSES)
+    model = module.Model(NUMBER_CLASSES)
     parser = argparse.ArgumentParser(description='Train or evaluate a model')
     args = parser.parse_args()
     args.epochs = 100
@@ -30,34 +42,26 @@ def test_LeNet5() -> None:
         transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
     ])
     # Load the datasets
-    print('Loading the dataset...')
     train_loader = helpermethods.load_dataset(CustomDataset_module, file_training, transform, args)
     # Train the model
-    print('Training the model...')
 
     # Define loss function and optimizer
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
 
     inputs, labels = next(iter(train_loader))
-    losses = []
 
-    with tqdm(total=args.epochs, desc='Training', leave=True) as pbar:
-        for epoch in range(args.epochs):
-            # Set model to training mode
-            model.train()
-            # Move the data to the GPU if available
-            inputs, labels = inputs.to(device), labels.to(device)
-            outputs = model(inputs)
-            loss = criterion(outputs, labels)
-            optimizer.zero_grad()
-            loss.backward()
-            optimizer.step()
-            losses.append(loss.item())
-            pbar.update(1)
-            pbar.set_postfix({'Loss': loss.item()})
-        pbar.set_description(f"Done training {args.epochs} epochs")
-
-
-if __name__ == '__main__':
-    test_LeNet5()
+    for epoch in range(args.epochs):
+        print(f'Epoch {epoch + 1}/{args.epochs}')
+        # Set model to training mode
+        model.train()
+        # Move the data to the GPU if available
+        inputs, labels = inputs.to(device), labels.to(device)
+        outputs = model(inputs)
+        loss = criterion(outputs, labels)
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+        if loss.item() < threshold:
+            break
+    return loss.item() < threshold, loss.item()
