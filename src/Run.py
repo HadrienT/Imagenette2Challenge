@@ -144,7 +144,7 @@ def main() -> None:
                 end_save = 0.0 if start_save == 0 else time.time()
                 pbar.update(1)
                 pbar.set_postfix({'Loss': loss.item()})
-            pbar.set_description(f"Done training epoch [{epoch}/{args.epochs}]")
+            pbar.set_description(f"Done training epoch [{epoch+1}/{args.epochs}]")
 
         end_epoch = time.time()
 
@@ -177,7 +177,7 @@ def main() -> None:
                     val_total += inputs.size(0)
                     pbar.update(1)
                     pbar.set_postfix({'Loss': loss.item()})
-                pbar.set_description(f"Done validating epoch [{epoch}/{args.epochs}]")
+                pbar.set_description(f"Done validating epoch [{epoch+1}/{args.epochs}]")
 
         measures = f'{epoch},{end_train-start_train:.3f},{end_crit-start_crit:.3f},{end_opti-start_opti:.3f}, \
             {end_acc-start_acc:.3f},{end_save-start_save:.3f},{end_epoch-start_epoch:.3f}\n'
