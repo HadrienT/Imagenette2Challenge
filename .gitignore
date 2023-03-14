@@ -24,3 +24,5 @@ src/Imagenette2Challenge.egg-info/
 report.html
 
 assets/
+
+.env
