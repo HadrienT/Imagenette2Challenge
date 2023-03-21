@@ -11,6 +11,7 @@ import PIL.Image as Image
 from utils import SerializeDataset
 
 
+@pytest.mark.skip(reason="Skip because of dataset")
 def test_get_class_folders() -> None:
     folders = SerializeDataset.get_class_folders('E:\\ML\\Datasets\\imagenette2\\train')
     target = ['n01440764', 'n02102040', 'n02979186', 'n03000684', 'n03028079', 'n03394916', 'n03417042', 'n03425413', 'n03445777', 'n03888257']
@@ -60,6 +61,7 @@ def test_image_to_tensor() -> None:
         assert len(os.listdir(tmpdir)) == nb_color_images
 
 
+@pytest.mark.skip(reason="Skip because of dataset")
 def test_convert_dataset() -> None:
     root = "E:\\ML\\Datasets\\imagenette2"
     folders = ['train', 'val']
