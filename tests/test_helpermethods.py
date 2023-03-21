@@ -11,7 +11,7 @@ import stat
 import multiprocessing
 
 
-@pytest.skip("Skip to pass GitHub Actions")
+@pytest.mark.skip("Skip to pass GitHub Actions")
 def test_get_paths_and_labels() -> None:
     # Create a temporary file with sample data
     with tempfile.NamedTemporaryFile(mode='w+', delete=False) as f:
@@ -32,7 +32,6 @@ def test_get_paths_and_labels() -> None:
     os.remove(f.name)
 
 
-@pytest.skip("Skip to pass GitHub Actions")
 @pytest.mark.skip(reason="Takes too long but works")
 def test_load_dataset() -> None:
 

@@ -11,7 +11,7 @@ from dataLoaders import CustomDatasetRaw, CustomDatasetTransformed, InferLoader
 from utils import helpermethods as helpermethods
 
 
-@pytest.skip("Skip to pass GitHub Actions")
+@pytest.mark.skip("Skip to pass GitHub Actions")
 @pytest.fixture(scope="module")
 def sample_data_raw() -> tuple[list[str], list[int], transforms.Compose]:
     # Generate sample data
@@ -21,7 +21,7 @@ def sample_data_raw() -> tuple[list[str], list[int], transforms.Compose]:
     return image_paths, labels, transform
 
 
-@pytest.skip("Skip to pass GitHub Actions")
+@pytest.mark.skip("Skip to pass GitHub Actions")
 def test_custom_dataset_raw(sample_data_raw: tuple[list[str], list[int], transforms.Compose]) -> None:
     # Test the CustomDataset class
     image_paths, labels, transform = sample_data_raw
@@ -45,7 +45,7 @@ def test_custom_dataset_raw(sample_data_raw: tuple[list[str], list[int], transfo
     assert batch_labels.shape == (2,)
 
 
-@pytest.skip("Skip to pass GitHub Actions")
+@pytest.mark.skip("Skip to pass GitHub Actions")
 @pytest.fixture(scope="module")
 def sample_data_transformed() -> tuple[list[str], list[int], transforms.Compose]:
     # Generate sample data
@@ -55,7 +55,7 @@ def sample_data_transformed() -> tuple[list[str], list[int], transforms.Compose]
     return image_paths, labels, transform
 
 
-@pytest.skip("Skip to pass GitHub Actions")
+@pytest.mark.skip("Skip to pass GitHub Actions")
 def test_custom_dataset_transformed(sample_data_transformed: tuple[list[str], list[int], transforms.Compose]) -> None:
     # Test the CustomDataset class
     image_paths, labels, transform = sample_data_transformed
