@@ -18,7 +18,7 @@ def train(model_module: str) -> tuple[bool, float]:
     args = parser.parse_args()
     args.epochs = 100
     args.batch_size = 32
-    file_training = 'E:\\ML\\Datasets\\imagenette2\\train.txt'
+    file_training = 'E:/ML/Datasets/imagenette2/train.txt'
     CustomDataset_module = importlib.import_module('dataLoaders.CustomDatasetRaw')
     # Check if GPU is available
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")

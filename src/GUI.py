@@ -46,7 +46,7 @@ class App(tk.Frame):
         self.batch_size_entry.grid(row=2, column=1)
 
         # Checkpoint parameter
-        checkpoints = os.listdir('E:\\ML\\Checkpoints\\')
+        checkpoints = os.listdir('E:/ML/Checkpoints/')
         checkpoints = [checkpoint.split('.pt')[0] for checkpoint in checkpoints if checkpoint.endswith('.pt')]
 
         self.checkpoint_label = tk.Label(self, text="Checkpoint:")
@@ -125,7 +125,7 @@ class App(tk.Frame):
         if self.proc and self.proc.poll() is None:
             messagebox.showinfo("Error", "A subprocess is already running.")
             return
-        cmd = ["python", ".\\src\\Run.py",
+        cmd = ["python", "./src/Run.py",
                "--model", model, "--epochs", epochs,
                "--batch_size", batch_size,
                "--checkpoint", checkpoint,

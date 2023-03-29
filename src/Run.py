@@ -19,14 +19,14 @@ def main() -> None:
     # Parse the arguments
     args = helpermethods.parse_arguments()
 
-    base_path = 'E:\\ML\\'
-    measures_folder_path = base_path + f"Measures\\{args.model}"
-    checkpoint_path = base_path + 'Checkpoints\\' + args.checkpoint + '.pt'
+    base_path = 'E:/ML/'
+    measures_folder_path = base_path + f"Measures/{args.model}"
+    checkpoint_path = base_path + 'Checkpoints/' + args.checkpoint + '.pt'
 
     # check if the folder exists
     helpermethods.make_folder(measures_folder_path)
 
-    measures_folder_path = measures_folder_path + f"\\{date}.csv"
+    measures_folder_path = measures_folder_path + f"/{date}.csv"
     measures_file = open(measures_folder_path, 'a')
     measures_file.write("num_epoch,image (ms),criterion (ms),optimizer (ms),accuracy (ms),checkpoint (ms),epoch (s)\n")
     # Define the model
@@ -37,12 +37,12 @@ def main() -> None:
 
     if args.transformed:
         CustomDataset_module = importlib.import_module('dataLoaders.CustomDatasetTransformed')
-        file_training = base_path + 'Datasets\\imagenette2\\transformed\\train.txt'
-        file_validation = base_path + 'Datasets\\imagenette2\\transformed\\val.txt'
+        file_training = base_path + 'Datasets/imagenette2/transformed/train.txt'
+        file_validation = base_path + 'Datasets/imagenette2/transformed/val.txt'
     else:
         CustomDataset_module = importlib.import_module('dataLoaders.CustomDatasetRaw')
-        file_training = base_path + 'Datasets\\imagenette2\\train.txt'
-        file_validation = base_path + 'Datasets\\imagenette2\\val.txt'
+        file_training = base_path + 'Datasets/imagenette2/train.txt'
+        file_validation = base_path + 'Datasets/imagenette2/val.txt'
     # Check if GPU is available
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model = model.to(device)

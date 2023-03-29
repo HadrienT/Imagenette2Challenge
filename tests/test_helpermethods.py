@@ -15,17 +15,17 @@ import multiprocessing
 def test_get_paths_and_labels() -> None:
     # Create a temporary file with sample data
     with tempfile.NamedTemporaryFile(mode='w+', delete=False) as f:
-        f.write("E:\\ML\\Datasets\\imagenette2\\train\\n01440764\\ILSVRC2012_val_00000293.JPEG,tench\n")
-        f.write("E:\\ML\\Datasets\\imagenette2\\train\\n01440764\\ILSVRC2012_val_00002138.JPEG,tench\n")
-        f.write("E:\\ML\\Datasets\\imagenette2\\train\\n01440764\\ILSVRC2012_val_00003014.JPEG,tench\n")
+        f.write("E:/ML/Datasets/imagenette2/train/n01440764/ILSVRC2012_val_00000293.JPEG,tench\n")
+        f.write("E:/ML/Datasets/imagenette2/train/n01440764/ILSVRC2012_val_00002138.JPEG,tench\n")
+        f.write("E:/ML/Datasets/imagenette2/train/n01440764/ILSVRC2012_val_00003014.JPEG,tench\n")
 
     # Call the function
     image_paths, labels = helpermethods.get_paths_and_labels(f.name)
 
     # Check the output
-    assert image_paths[:3] == ["E:\\ML\\Datasets\\imagenette2\\train\\n01440764\\ILSVRC2012_val_00000293.JPEG",
-                               "E:\\ML\\Datasets\\imagenette2\\train\\n01440764\\ILSVRC2012_val_00002138.JPEG",
-                               "E:\\ML\\Datasets\\imagenette2\\train\\n01440764\\ILSVRC2012_val_00003014.JPEG"]
+    assert image_paths[:3] == ["E:/ML/Datasets/imagenette2/train/n01440764/ILSVRC2012_val_00000293.JPEG",
+                               "E:/ML/Datasets/imagenette2/train/n01440764/ILSVRC2012_val_00002138.JPEG",
+                               "E:/ML/Datasets/imagenette2/train/n01440764/ILSVRC2012_val_00003014.JPEG"]
     assert labels == [0 for _ in range(3)]
 
     # Clean up the temporary file
@@ -36,7 +36,7 @@ def test_get_paths_and_labels() -> None:
 def test_load_dataset() -> None:
 
     module = CustomDatasetRaw
-    file = "E:\\ML\\Datasets\\imagenette2\\train.txt"
+    file = "E:/ML/Datasets/imagenette2/train.txt"
     image_paths, classes = helpermethods.get_paths_and_labels(file)
     transform = transforms.Compose([
         transforms.Resize((256, 256)),

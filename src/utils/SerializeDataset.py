@@ -11,8 +11,8 @@ def get_class_folders(root: str) -> list[str]:
 def make_hierarchy(root: str) -> None:
     folders = get_class_folders(os.path.join(root, 'train'))
 
-    train_dir = os.path.join(root, 'transformed\\train')
-    val_dir = os.path.join(root, 'transformed\\val')
+    train_dir = os.path.join(root, 'transformed/train')
+    val_dir = os.path.join(root, 'transformed/val')
 
     if not os.path.exists(train_dir):
         os.makedirs(train_dir)
@@ -62,7 +62,7 @@ def convert_dataset(root_dir: str) -> None:
 
 
 def main() -> None:
-    root = "E:\\ML\\Datasets\\imagenette2"
+    root = "E:/ML/Datasets/imagenette2"
     make_hierarchy(root)
     convert_dataset(root)
 

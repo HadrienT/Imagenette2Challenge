@@ -15,7 +15,7 @@ from utils import helpermethods as helpermethods
 @pytest.fixture(scope="module")
 def sample_data_raw() -> tuple[list[str], list[int], transforms.Compose]:
     # Generate sample data
-    file = "E:\\ML\\Datasets\\imagenette2\\train.txt"
+    file = "E:/ML/Datasets/imagenette2/train.txt"
     image_paths, labels = helpermethods.get_paths_and_labels(file)
     transform = transforms.Compose([transforms.Resize((256, 256)), transforms.ToTensor()])
     return image_paths, labels, transform
@@ -49,7 +49,7 @@ def test_custom_dataset_raw(sample_data_raw: tuple[list[str], list[int], transfo
 @pytest.fixture(scope="module")
 def sample_data_transformed() -> tuple[list[str], list[int], transforms.Compose]:
     # Generate sample data
-    file = "E:\\ML\\Datasets\\imagenette2\\transformed\\train.txt"
+    file = "E:/ML/Datasets/imagenette2/transformed/train.txt"
     image_paths, labels = helpermethods.get_paths_and_labels(file)
     transform = transforms.Compose([transforms.Resize((256, 256)), transforms.ToTensor()])
     return image_paths, labels, transform
