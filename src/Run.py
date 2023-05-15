@@ -206,4 +206,3 @@ def main() -> None:
 
 if __name__ == '__main__':
     main()
-python src/Run.py --model LeNet_5 --epochs 1 --batch_size 32 --checkpoint test.pt --figures --transformed --metric 1
