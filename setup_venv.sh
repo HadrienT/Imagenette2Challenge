@@ -11,8 +11,6 @@ sudo apt install -y git python3-pip python3-venv
 # Clone the Git repository
 git clone https://github.com/HadrienT/Imagenette2Challenge.git
 
-mv .env Imagenette2Challenge/.env
-
 # Change to the cloned repository directory
 cd Imagenette2Challenge
 
