@@ -1,11 +1,12 @@
+from typing import Any, Tuple, List
+
 import torch
-from typing import Any, Tuple
 from torch.utils.data import Dataset
 from torchvision import transforms
 
 
 class CustomDataset(Dataset[Any]):
-    def __init__(self, images: list[str], labels: list[int], transform: transforms.Compose = None) -> None:
+    def __init__(self, images: List[str], labels: List[int], transform: transforms.Compose = None) -> None:
         self.images = images
         self.labels = labels
         self.transform = transform

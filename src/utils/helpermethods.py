@@ -1,12 +1,13 @@
-import torch
 import argparse
-from torch.utils.data import DataLoader
-import torchvision.transforms as transforms
 import multiprocessing
 import types
 import stat
 import os
-from typing import Any
+from typing import Any, Tuple, List
+
+import torch
+from torch.utils.data import DataLoader
+import torchvision.transforms as transforms
 
 
 def parse_arguments() -> argparse.Namespace:
@@ -23,7 +24,7 @@ def parse_arguments() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def get_paths_and_labels(file: str) -> tuple[list[str], list[int]]:
+def get_paths_and_labels(file: str) -> Tuple[List[str], List[int]]:
     labels = ['tench', 'English springer', 'cassette player', 'chain saw', 'church', 'French horn', 'garbage truck', 'gas pump', 'golf ball', 'parachute']
     label_to_index = {label: index for index, label in enumerate(labels)}
 
@@ -65,5 +66,5 @@ def make_folder(path: str) -> None:
             raise OSError(f"Failed to create measures folder: {e}")
 
 
-def send_result(queue: multiprocessing.Queue, result: list[int]) -> None:  # type: ignore
+def send_result(queue: multiprocessing.Queue, result: List[int]) -> None:  # type: ignore
     queue.put(result)

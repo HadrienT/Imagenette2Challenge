@@ -1,12 +1,13 @@
+from typing import Any, Tuple, Union, List
 import PIL.Image as Image
+
 import torch
 from torch.utils.data import Dataset
-from typing import Any, Tuple, Union
 from torchvision import transforms
 
 
 class CustomDataset(Dataset[Any]):
-    def __init__(self, image_paths: list[str], labels: list[int], transform: transforms.Compose = None) -> None:
+    def __init__(self, image_paths: List[str], labels: List[int], transform: transforms.Compose = None) -> None:
         self.image_paths = image_paths
         self.labels = labels
         self.transform = transform

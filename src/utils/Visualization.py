@@ -1,13 +1,15 @@
+from typing import List
+import argparse
+
 import numpy as np
 from matplotlib import pyplot as plt
-import argparse
 import pandas as pd
 
 # plot metrics over time
 
 
-def plot_metrics(losses_training: list[float], accuracies_training: list[float],
-                 losses_validation: list[float], accuracies_validation: list[float],
+def plot_metrics(losses_training: List[float], accuracies_training: List[float],
+                 losses_validation: List[float], accuracies_validation: List[float],
                  args: argparse.Namespace) -> None:
     abscisse = np.arange(1, args.epochs+1)
     _, ax = plt.subplots(nrows=1, ncols=2, figsize=(15, 5), tight_layout=True)

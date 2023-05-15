@@ -1,9 +1,10 @@
-import gradio as gr
 import os
+import atexit
 import subprocess
 from typing import Optional
-import atexit
 import time
+
+import gradio as gr
 
 
 def calculate_progress(output):
@@ -90,4 +91,4 @@ if __name__ == "__main__":
         description="Run your machine learning model with specific parameters.",
     )
 
-    iface.launch(queue=True)
+    iface.queue().launch()

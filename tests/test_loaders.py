@@ -1,5 +1,6 @@
 import os
 import tempfile
+from typing import List, Tuple
 
 import pytest
 import torch
@@ -13,7 +14,7 @@ from utils import helpermethods as helpermethods
 
 @pytest.mark.skip("Skip to pass GitHub Actions")
 @pytest.fixture(scope="module")
-def sample_data_raw() -> tuple[list[str], list[int], transforms.Compose]:
+def sample_data_raw() -> tuple[List[str], List[int], transforms.Compose]:
     # Generate sample data
     file = "E:/ML/Datasets/imagenette2/train.txt"
     image_paths, labels = helpermethods.get_paths_and_labels(file)
@@ -22,7 +23,7 @@ def sample_data_raw() -> tuple[list[str], list[int], transforms.Compose]:
 
 
 @pytest.mark.skip("Skip to pass GitHub Actions")
-def test_custom_dataset_raw(sample_data_raw: tuple[list[str], list[int], transforms.Compose]) -> None:
+def test_custom_dataset_raw(sample_data_raw: Tuple[List[str], List[int], transforms.Compose]) -> None:
     # Test the CustomDataset class
     image_paths, labels, transform = sample_data_raw
     dataset = CustomDatasetRaw.CustomDataset(image_paths, labels, transform=transform)
@@ -47,7 +48,7 @@ def test_custom_dataset_raw(sample_data_raw: tuple[list[str], list[int], transfo
 
 @pytest.mark.skip("Skip to pass GitHub Actions")
 @pytest.fixture(scope="module")
-def sample_data_transformed() -> tuple[list[str], list[int], transforms.Compose]:
+def sample_data_transformed() -> Tuple[List[str], List[int], transforms.Compose]:
     # Generate sample data
     file = "E:/ML/Datasets/imagenette2/transformed/train.txt"
     image_paths, labels = helpermethods.get_paths_and_labels(file)
@@ -56,7 +57,7 @@ def sample_data_transformed() -> tuple[list[str], list[int], transforms.Compose]
 
 
 @pytest.mark.skip("Skip to pass GitHub Actions")
-def test_custom_dataset_transformed(sample_data_transformed: tuple[list[str], list[int], transforms.Compose]) -> None:
+def test_custom_dataset_transformed(sample_data_transformed: Tuple[List[str], List[int], transforms.Compose]) -> None:
     # Test the CustomDataset class
     image_paths, labels, transform = sample_data_transformed
     dataset = CustomDatasetTransformed.CustomDataset(image_paths, labels, transform=transform)

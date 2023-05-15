@@ -1,12 +1,13 @@
+import os
+import datetime
+import time
+import importlib
+
 import torch
 import torchvision.transforms as transforms
 import torch.nn as nn
-
-import datetime
-import time
-import os
 from tqdm import tqdm
-import importlib
+
 from utils.Visualization import plot_metrics, plot_time_measures
 from utils.Header import print_header
 import utils.helpermethods as helpermethods
@@ -205,3 +206,4 @@ def main() -> None:
 
 if __name__ == '__main__':
     main()
+python src/Run.py --model LeNet_5 --epochs 1 --batch_size 32 --checkpoint test.pt --figures --transformed --metric 1

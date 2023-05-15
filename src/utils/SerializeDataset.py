@@ -1,10 +1,12 @@
 import os
-import torch
-import torchvision.transforms as transforms
+from typing import List
 from PIL import Image
 
+import torch
+import torchvision.transforms as transforms
 
-def get_class_folders(root: str) -> list[str]:
+
+def get_class_folders(root: str) -> List[str]:
     return os.listdir(root)
 
 
