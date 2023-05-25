@@ -15,14 +15,14 @@ import utils.helpermethods as helpermethods
 
 
 class Args:
-    def __init__(self, epochs: int, model_name: str, batch_size: int, target: int):
+    def __init__(self, epochs: int, model_name: str, batch_size: int, target: int, checkpoint: str):
         self.epochs = epochs
         self.model = model_name
         self.batch_size = batch_size
         self.metric = target
         self.transformed = False
         self.figures = False
-        self.checkpoint = model_name
+        self.checkpoint = checkpoint
 
 
 def main() -> None:
@@ -30,11 +30,12 @@ def main() -> None:
     date = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
     # Parse the arguments
-    args = Args(EPOCHS, model_name, BATCH_SIZE, TARGET)
+    args = Args(EPOCHS, model_name, BATCH_SIZE, TARGET, CHECKPOINT)
     # args = helpermethods.parse_arguments()
 
     base_path = "E:/ML/"
     measures_folder_path = base_path + f"Measures/{args.model}"
+    metric_file_path = base_path + "/metrics.pt"
     checkpoint_path = base_path + "Checkpoints/" + args.checkpoint + ".pt"
 
     # check if the folder exists
@@ -148,7 +149,8 @@ def main() -> None:
 
         # Use the dataloader to access the data in batches
         start_epoch = time.time()
-        with tqdm(total=len(train_loader), desc="Training", leave=True) as pbar:
+        with tqdm(total=len(train_loader), unit="batch", desc="Training", leave=True) as pbar:
+            pbar.set_description(f"Epoch {epoch+1}")
             for inputs, labels in train_loader:
                 # Move the data to the GPU if available
                 inputs, labels = inputs.to(device), labels.to(device)
@@ -194,7 +196,8 @@ def main() -> None:
         model.eval()
 
         with torch.no_grad():
-            with tqdm(total=len(val_loader), desc="Validating", leave=True) as pbar:
+            with tqdm(total=len(val_loader), unit="batch", desc="Validating", leave=True) as pbar:
+                pbar.set_description(f"Epoch {epoch+1}")
                 for inputs, labels in val_loader:
                     # Move the data to the GPU if available
                     inputs, labels = inputs.to(device), labels.to(device)
@@ -234,13 +237,6 @@ def main() -> None:
         val_acc.append(np.mean(val_acc_epoch))
         val_loss.append(np.mean(val_loss_epoch))
 
-        print(
-            f"Epoch [{epoch+1}/{args.epochs}]: Training loss = {train_loss:.3f}, Training accuracy = {train_acc:.3f}"
-        )
-        print(
-            f"Epoch [{epoch+1}/{args.epochs}]: Validation loss = {val_loss:.3f}, Validation accuracy = {val_acc:.3f}"
-        )
-
     # log metrics
     metrics = {
         "losses_training": train_loss,
@@ -248,7 +244,7 @@ def main() -> None:
         "losses_validation": val_loss,
         "accuracies_validation": val_acc,
     }
-    torch.save(metrics, measures_folder_path + "/metrics.pt")
+    torch.save(metrics, metric_file_path)
 
     for k, v in metrics.items():
         print(f"{k} : {v}")
@@ -260,11 +256,12 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    reset = True
+    reset = False
     EPOCHS = 1
     model_name = "LeNet_5"
     BATCH_SIZE = 32
     TARGET = 1
     NUMBER_CLASSES = 10
     DEVICE_ITERATIONS = 1
+    CHECKPOINT = "test"
     main()
