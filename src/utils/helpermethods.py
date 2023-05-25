@@ -40,18 +40,24 @@ def get_paths_and_labels(file: str) -> Tuple[List[str], List[int]]:
     return image_paths, classes
 
 
-def load_dataset(CustomDataset_module: types.ModuleType, file: str, transform: transforms, args: argparse.Namespace) -> DataLoader[Any]:
+def load_dataset(CustomDataset_module: types.ModuleType, file: str, transform: transforms) -> DataLoader[Any]:
     image_paths, classes = get_paths_and_labels(file)
-    # Create a dataloader to load the data in batches
     data_training = CustomDataset_module.CustomDataset(image_paths, classes, transform)
-    dataloader_training = torch.utils.data.DataLoader(data_training, batch_size=args.batch_size, shuffle=True, num_workers=6)
-
-    return dataloader_training
+    return data_training
 
 
 def compute_accuracy(output: torch.Tensor, labels: torch.Tensor, args: argparse.Namespace) -> float:
     _, predicted = torch.topk(output, k=args.metric, dim=1)
-    correct = (predicted == labels.view(-1, 1)).sum().item()
+    correct = torch.eq(predicted, labels.view(-1, 1).expand_as(predicted)).sum().item()
+    return float(correct)
+
+
+def compute_accuracy_IPU(output: torch.Tensor, labels: torch.Tensor, args: argparse.Namespace, device_iterations: int) -> float:
+    # Reshape labels to match output's batch size
+    labels = labels.view(device_iterations, -1, 1)
+    _, predicted = torch.topk(output, k=args.metric, dim=1)
+    # Calculate the number of correct predictions for each mini-batch and sum them up
+    correct = torch.eq(predicted, labels).sum().item()
     return float(correct)
 
 

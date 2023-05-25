@@ -16,8 +16,10 @@ def print_header(args: argparse.Namespace, params: dict[Any, Any]) -> None:
     print(f"- Epochs: {args.epochs}")
     print(f"- Batch size: {args.batch_size}")
     print(f"- Metric: {args.metric}")
-    print(f"- Transformed: {args.transformed}")
-    print(f"- Figures: {args.figures}")
+    if hasattr(args, 'transformed'):
+        print(f"- Transformed: {args.transformed}")
+    if hasattr(args, 'figures'):
+        print(f"- Figures: {args.figures}")
     print()
     print("Configuration:")
     print(f"- Device: {params.get('device')}")
