@@ -15,7 +15,7 @@ import utils.helpermethods as helpermethods
 
 
 class Args:
-    def __init__(self, epochs: int, model_name: str, batch_size: int, target: int, checkpoint: str):
+    def __init__(self, epochs: int, model_name: str, batch_size: int, target: int, checkpoint: str, training_mode: bool):
         self.epochs = epochs
         self.model = model_name
         self.batch_size = batch_size
@@ -23,6 +23,7 @@ class Args:
         self.transformed = False
         self.figures = False
         self.checkpoint = checkpoint
+        self.training_mode = training_mode
 
 
 def main() -> None:
@@ -30,7 +31,7 @@ def main() -> None:
     date = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
     # Parse the arguments
-    args = Args(EPOCHS, model_name, BATCH_SIZE, TARGET, CHECKPOINT)
+    args = Args(EPOCHS, MODEL_NAME, BATCH_SIZE, TARGET, CHECKPOINT, TRAINING_MODE)
     # args = helpermethods.parse_arguments()
 
     base_path = "E:/ML/"
@@ -111,10 +112,9 @@ def main() -> None:
 
     # Train the model
     print("Training the model...")
-
     # check if checkpoint exists
     if os.path.exists(checkpoint_path):
-        if reset:
+        if RESET:
             # delete checkpoint
             os.remove(checkpoint_path)
             print("Checkpoint removed.")
@@ -126,8 +126,15 @@ def main() -> None:
             # Load the checkpoint
             checkpoint = torch.load(checkpoint_path)
             model.load_state_dict(checkpoint["model_state_dict"])
-            optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
-            best_loss = checkpoint["best_loss"]
+
+            # Load the optimizer state and best loss only during training
+            if args.training_mode:
+                optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
+                best_loss = checkpoint["best_loss"]
+            else:
+                best_loss = float(
+                    "inf"
+                )  # If not in training mode, initializing best_loss as infinity
     else:
         print("No checkpoint found.")
         best_loss = float(
@@ -140,53 +147,54 @@ def main() -> None:
     val_acc = []
 
     for epoch in range(args.epochs):
-        # Training
-        train_loss_epoch = []
-        train_acc_epoch = []
+        if args.training_mode:
+            # Training
+            train_loss_epoch = []
+            train_acc_epoch = []
 
-        # Set model to training mode
-        model.train()
+            # Set model to training mode
+            model.train()
 
-        # Use the dataloader to access the data in batches
-        start_epoch = time.time()
-        with tqdm(total=len(train_loader), unit="batch", desc="Training", leave=True) as pbar:
-            pbar.set_description(f"Epoch {epoch+1}")
-            for inputs, labels in train_loader:
-                # Move the data to the GPU if available
-                inputs, labels = inputs.to(device), labels.to(device)
+            # Use the dataloader to access the data in batches
+            start_epoch = time.time()
+            with tqdm(total=len(train_loader), unit="batch", desc="Training", leave=True) as pbar:
+                pbar.set_description(f"Epoch {epoch+1}")
+                for inputs, labels in train_loader:
+                    # Move the data to the GPU if available
+                    inputs, labels = inputs.to(device), labels.to(device)
 
-                start_train = time.time()
-                outputs = model(inputs)
-                end_train = time.time()
+                    start_train = time.time()
+                    outputs = model(inputs)
+                    end_train = time.time()
 
-                start_crit = time.time()
-                loss = criterion(outputs, labels)
-                end_crit = time.time()
+                    start_crit = time.time()
+                    loss = criterion(outputs, labels)
+                    end_crit = time.time()
 
-                # Backward pass and optimization
-                start_opti = time.time()
-                optimizer.zero_grad()
-                loss.backward()
-                optimizer.step()
-                end_opti = time.time()
+                    # Backward pass and optimization
+                    start_opti = time.time()
+                    optimizer.zero_grad()
+                    loss.backward()
+                    optimizer.step()
+                    end_opti = time.time()
 
-                # compute accuracy
-                start_acc = time.time()
-                train_accuracy = helpermethods.compute_accuracy(outputs, labels, args)
-                end_acc = time.time()
+                    # compute accuracy
+                    start_acc = time.time()
+                    train_accuracy = helpermethods.compute_accuracy(outputs, labels, args)
+                    end_acc = time.time()
 
-                # update metrics
-                train_loss_epoch.append(loss.item())
-                train_acc_epoch.append(train_accuracy)
+                    # update metrics
+                    train_loss_epoch.append(loss.item())
+                    train_acc_epoch.append(train_accuracy)
 
-                pbar.update(1)
-                pbar.set_postfix({"Loss": loss.item()})
+                    pbar.update(1)
+                    pbar.set_postfix({"Loss": loss.item()})
 
-            pbar.set_description(f"Done training epoch [{epoch+1}/{args.epochs}]")
-        # Compute average training loss and accuracy
-        train_acc.append(np.mean(train_acc_epoch))
-        train_loss.append(np.mean(train_loss_epoch))
-        end_epoch = time.time()
+                pbar.set_description(f"Done training epoch [{epoch+1}/{args.epochs}]")
+            # Compute average training loss and accuracy
+            train_acc.append(np.mean(train_acc_epoch))
+            train_loss.append(np.mean(train_loss_epoch))
+            end_epoch = time.time()
 
         # Validation
         val_loss_epoch = []
@@ -229,9 +237,10 @@ def main() -> None:
                     pbar.set_postfix({"Loss": loss.item()})
                 pbar.set_description(f"Done validating epoch [{epoch+1}/{args.epochs}]")
 
-        measures = f"{epoch},{end_train-start_train:.3f},{end_crit-start_crit:.3f},{end_opti-start_opti:.3f}, \
-            {end_acc-start_acc:.3f},{end_save-start_save:.3f},{end_epoch-start_epoch:.3f}\n"
-        measures_file.write(measures)
+        if args.training_mode:
+            measures = f"{epoch},{end_train-start_train:.3f},{end_crit-start_crit:.3f},{end_opti-start_opti:.3f}, \
+                {end_acc-start_acc:.3f},{end_save-start_save:.3f},{end_epoch-start_epoch:.3f}\n"
+            measures_file.write(measures)
 
         # Compute average validation loss and accuracy
         val_acc.append(np.mean(val_acc_epoch))
@@ -256,12 +265,13 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    reset = False
+    RESET = False
     EPOCHS = 1
-    model_name = "LeNet_5"
+    MODEL_NAME = "LeNet_5"
     BATCH_SIZE = 32
     TARGET = 1
     NUMBER_CLASSES = 10
     DEVICE_ITERATIONS = 1
     CHECKPOINT = "test"
+    TRAINING_MODE = False
     main()
