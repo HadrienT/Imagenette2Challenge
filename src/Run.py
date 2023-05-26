@@ -90,19 +90,20 @@ def main() -> None:
     print("Loading the dataset...")
     start = time.time()
 
-    train_dataset = helpermethods.load_dataset(
-        CustomDataset_module,
-        file_training,
-        transform,
-    )
+    if args.training_mode:
+        train_dataset = helpermethods.load_dataset(
+            CustomDataset_module,
+            file_training,
+            transform,
+        )
+        train_loader = torch.utils.data.DataLoader(
+            train_dataset, batch_size=args.batch_size, shuffle=True, num_workers=6
+        )
 
     val_dataset = helpermethods.load_dataset(
         CustomDataset_module,
         file_validation,
         transform,
-    )
-    train_loader = torch.utils.data.DataLoader(
-        train_dataset, batch_size=args.batch_size, shuffle=True, num_workers=6
     )
     val_loader = torch.utils.data.DataLoader(
         val_dataset, batch_size=args.batch_size, shuffle=True, num_workers=6

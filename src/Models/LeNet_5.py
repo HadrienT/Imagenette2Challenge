@@ -38,7 +38,7 @@ class Model(nn.Module):
 
         x = self.fc3(x)
 
-        if target is not None:
+        if self.training:
             loss = self.loss(x, target)
             return x, loss
         return x

@@ -17,7 +17,7 @@ def create_path_transformed(root: str) -> None:
 
     with open(root + '/train.txt', 'w') as f:
         filename = 'train'
-        for idx, im_class in enumerate(os.listdir(os.path.join(root, filename))):
+        for idx, im_class in enumerate(sorted(os.listdir(os.path.join(root, filename)))):
             for image in os.listdir(os.path.join(root, filename, im_class)):
                 full_path = os.path.join(root, filename, im_class, image)
                 full_path = full_path + ',' + labels[idx] + '\n'
@@ -26,7 +26,7 @@ def create_path_transformed(root: str) -> None:
 
     with open(root + '/val.txt', 'w') as f:
         filename = 'val'
-        for idx, im_class in enumerate(os.listdir(os.path.join(root, filename))):
+        for idx, im_class in enumerate(sorted(os.listdir(os.path.join(root, filename)))):
             for image in os.listdir(os.path.join(root, filename, im_class)):
                 full_path = os.path.join(root, filename, im_class, image)
                 full_path = full_path + ',' + labels[idx] + '\n'
@@ -39,7 +39,7 @@ def create_path_raw(root: str) -> None:
 
     with open(root + '/train.txt', 'w') as f:
         filename = 'train'
-        for idx, im_class in enumerate(os.listdir(os.path.join(root, filename))):
+        for idx, im_class in enumerate(sorted(os.listdir(os.path.join(root, filename)))):
             for image in os.listdir(os.path.join(root, filename, im_class)):
                 full_path = os.path.join(root, filename, im_class, image)
                 if valid_image(full_path):
@@ -49,7 +49,7 @@ def create_path_raw(root: str) -> None:
 
     with open(root + '/val.txt', 'w') as f:
         filename = 'val'
-        for idx, im_class in enumerate(os.listdir(os.path.join(root, filename))):
+        for idx, im_class in enumerate(sorted(os.listdir(os.path.join(root, filename)))):
             for image in os.listdir(os.path.join(root, filename, im_class)):
                 full_path = os.path.join(root, filename, im_class, image)
                 if valid_image(full_path):
