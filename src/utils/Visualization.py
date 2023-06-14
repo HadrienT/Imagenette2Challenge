@@ -11,6 +11,19 @@ import pandas as pd
 def plot_metrics(losses_training: List[float], accuracies_training: List[float],
                  losses_validation: List[float], accuracies_validation: List[float],
                  args: argparse.Namespace) -> None:
+    """
+    Plot the training and validation losses and accuracies over time.
+
+    Args:
+        losses_training (List[float]): List of training losses.
+        accuracies_training (List[float]): List of training accuracies.
+        losses_validation (List[float]): List of validation losses.
+        accuracies_validation (List[float]): List of validation accuracies.
+        args (argparse.Namespace): Command-line arguments.
+
+    Returns:
+        None
+    """
     abscisse = np.arange(1, args.epochs+1)
     _, ax = plt.subplots(nrows=1, ncols=2, figsize=(15, 5), tight_layout=True)
     ax = ax.flatten()
@@ -37,6 +50,15 @@ def plot_metrics(losses_training: List[float], accuracies_training: List[float],
 
 
 def plot_time_measures(file_path: str) -> None:
+    """
+    Plot the time measures from a CSV file.
+
+    Args:
+        file_path (str): Path to the CSV file.
+
+    Returns:
+        None
+    """
     data_type = {'num_epoch': int,
                  'image (ms)': np.float64,
                  'criterion (ms)': np.float64,

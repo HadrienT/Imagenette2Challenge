@@ -15,6 +15,10 @@ from utils import helpermethods as helpermethods
 @pytest.mark.skip("Skip to pass GitHub Actions")
 @pytest.fixture(scope="module")
 def sample_data_raw() -> tuple[List[str], List[int], transforms.Compose]:
+    """
+    Fixture for generating sample data for the CustomDatasetRaw class.
+    Returns a tuple containing the image paths, labels, and the transformation function.
+    """
     # Generate sample data
     file = "E:/ML/Datasets/imagenette2/train.txt"
     image_paths, labels = helpermethods.get_paths_and_labels(file)
@@ -24,6 +28,9 @@ def sample_data_raw() -> tuple[List[str], List[int], transforms.Compose]:
 
 @pytest.mark.skip("Skip to pass GitHub Actions")
 def test_custom_dataset_raw(sample_data_raw: Tuple[List[str], List[int], transforms.Compose]) -> None:
+    """
+    Test function for the CustomDatasetRaw class.
+    """
     # Test the CustomDataset class
     image_paths, labels, transform = sample_data_raw
     dataset = CustomDatasetRaw.CustomDataset(image_paths, labels, transform=transform)
@@ -49,6 +56,10 @@ def test_custom_dataset_raw(sample_data_raw: Tuple[List[str], List[int], transfo
 @pytest.mark.skip("Skip to pass GitHub Actions")
 @pytest.fixture(scope="module")
 def sample_data_transformed() -> Tuple[List[str], List[int], transforms.Compose]:
+    """
+    Fixture for generating sample data for the CustomDatasetTransformed class.
+    Returns a tuple containing the image paths, labels, and the transformation function.
+    """
     # Generate sample data
     file = "E:/ML/Datasets/imagenette2/transformed/train.txt"
     image_paths, labels = helpermethods.get_paths_and_labels(file)
@@ -58,6 +69,9 @@ def sample_data_transformed() -> Tuple[List[str], List[int], transforms.Compose]
 
 @pytest.mark.skip("Skip to pass GitHub Actions")
 def test_custom_dataset_transformed(sample_data_transformed: Tuple[List[str], List[int], transforms.Compose]) -> None:
+    """
+    Test function for the CustomDatasetTransformed class.
+    """
     # Test the CustomDataset class
     image_paths, labels, transform = sample_data_transformed
     dataset = CustomDatasetTransformed.CustomDataset(image_paths, labels, transform=transform)
@@ -82,6 +96,9 @@ def test_custom_dataset_transformed(sample_data_transformed: Tuple[List[str], Li
 
 def test_infer_loader() -> None:
     # Generate sample data
+    """
+    Test function for the InferLoader class.
+    """
     with tempfile.TemporaryDirectory() as tempdir:
         img1 = Image.new("RGB", (32, 32), color="red")
         img2 = Image.new("RGB", (32, 32), color="blue")

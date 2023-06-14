@@ -4,6 +4,16 @@ import seaborn as sns
 
 
 def plot_metrics(model: str, start_epoch: int):
+    """
+    Plot training and validation metrics (loss and accuracy) over epochs.
+
+    Args:
+        model (str): The name of the model.
+        start_epoch (int): The starting epoch.
+
+    Returns:
+        None
+    """
     base_path = 'E:/ML/'
     measures_folder_path = base_path + f"Measures/{model}"
     # Load metrics from the file

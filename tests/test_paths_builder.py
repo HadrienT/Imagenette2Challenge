@@ -6,6 +6,9 @@ from utils import pathsBuilder
 
 
 def test_valid_image() -> None:
+    """
+    Test the valid_image function in the pathsBuilder module.
+    """
     with tempfile.TemporaryDirectory() as tmpdir:
         # test a valid RGB JPEG image
         with Image.new('RGB', (256, 256)) as img:
@@ -27,6 +30,9 @@ def test_valid_image() -> None:
 
 
 def test_create_path_transformed() -> None:
+    """
+    Test the create_path_transformed function in the pathsBuilder module.
+    """
     # create temporary directories for testing
     with tempfile.TemporaryDirectory() as tmpdir:
         root = tmpdir
@@ -54,6 +60,9 @@ def test_create_path_transformed() -> None:
 
 
 def test_create_path_raw() -> None:
+    """
+    Test the create_path_raw function in the pathsBuilder module.
+    """
     # create temporary directories for testing
     with tempfile.TemporaryDirectory() as tmpdir:
         root = tmpdir

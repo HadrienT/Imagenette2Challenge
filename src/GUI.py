@@ -9,6 +9,15 @@ from typing import Optional
 
 class App(tk.Frame):
     def __init__(self, master: tk.Tk) -> None:
+        """
+        Initialize the GUI application.
+
+        Args:
+            master (tk.Tk): The root Tkinter object.
+
+        Returns:
+            None
+        """
         super().__init__(master)
         self.master = master
         self.master.title("GUI Launcher")
@@ -97,10 +106,22 @@ class App(tk.Frame):
         atexit.register(self.kill_subprocess)
 
     def kill_subprocess(self) -> None:
+        """
+        Terminate the running subprocess when the program is closing down.
+
+        Returns:
+            None
+        """
         if self.proc and self.proc.poll() is None:
             self.proc.terminate()
 
     def run(self) -> None:
+        """
+        Run the selected parameters and call the Run.py script.
+
+        Returns:
+            None
+        """
         # Get parameter values
         model = self.model_var.get()
         epochs = self.epochs_var.get()
@@ -121,7 +142,6 @@ class App(tk.Frame):
                    f"Transformed: {transformed_message}"
                    )
         messagebox.showinfo("Parameter values", message)
-        # TODO: Call Run.py with the selected parameters
         if self.proc and self.proc.poll() is None:
             messagebox.showinfo("Error", "A subprocess is already running.")
             return

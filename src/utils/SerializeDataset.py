@@ -7,10 +7,28 @@ import torchvision.transforms as transforms
 
 
 def get_class_folders(root: str) -> List[str]:
+    """
+    Get the list of class folders in the given root directory.
+
+    Args:
+        root (str): The root directory.
+
+    Returns:
+        List[str]: The list of class folders.
+    """
     return os.listdir(root)
 
 
 def make_hierarchy(root: str) -> None:
+    """
+    Create the directory hierarchy for the transformed dataset.
+
+    Args:
+        root (str): The root directory.
+
+    Returns:
+        None
+    """
     folders = get_class_folders(os.path.join(root, 'train'))
 
     train_dir = os.path.join(root, 'transformed/train')
@@ -34,6 +52,17 @@ def make_hierarchy(root: str) -> None:
 
 
 def image_to_tensor(image_path: str, target_name: str, transform: transforms.Compose) -> None:
+    """
+    Convert an image to a tensor and save it as a .pt file.
+
+    Args:
+        image_path (str): The path to the image file.
+        target_name (str): The target name for the tensor file.
+        transform (transforms.Compose): The transformation to be applied on the image.
+
+    Returns:
+        None
+    """
     image = Image.open(image_path)
     if image.mode == 'RGB':
         tensor = transform(image)
@@ -41,6 +70,15 @@ def image_to_tensor(image_path: str, target_name: str, transform: transforms.Com
 
 
 def convert_dataset(root_dir: str) -> None:
+    """
+    Convert the dataset images to tensors.
+
+    Args:
+        root_dir (str): The root directory of the dataset.
+
+    Returns:
+        None
+    """
     # Define the transformation to be applied on the images
     transform = transforms.Compose([
         transforms.Resize((256, 256)),
@@ -64,6 +102,9 @@ def convert_dataset(root_dir: str) -> None:
 
 
 def main() -> None:
+    """
+    Main function to create the directory hierarchy and convert the dataset to tensors.
+    """
     root = "E:/ML/Datasets/imagenette2"
     make_hierarchy(root)
     convert_dataset(root)

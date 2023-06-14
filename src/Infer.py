@@ -1,12 +1,23 @@
-import torch
-from dataLoaders import InferLoader
-import utils.helpermethods as helpermethods
-from Models import LeNet_5
 import multiprocessing
+
+import torch
 from torchvision import transforms
 
+import utils.helpermethods as helpermethods
+from Models import LeNet_5
+from dataLoaders import InferLoader
 
-def main(queue: multiprocessing.Queue = multiprocessing.Queue()) -> None:  # type: ignore
+
+def main(queue: multiprocessing.Queue = multiprocessing.Queue()) -> None:
+    """
+    Main function for performing inference on images. This is the function that is ran in a separate process after every inference request.
+
+    Args:
+        queue (multiprocessing.Queue): Queue to store the inference results.
+
+    Returns:
+        None
+    """
     labels = ['tench', 'English springer', 'cassette player', 'chain saw', 'church', 'French horn', 'garbage truck', 'gas pump', 'golf ball', 'parachute']
     print('Infering...')
     model = LeNet_5.Model(10)

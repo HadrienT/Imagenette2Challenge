@@ -10,6 +10,16 @@ import utils.helpermethods as helpermethods
 
 
 def train(model_module: str) -> tuple[bool, float]:
+    """
+    Train a model specified by the given model_module.
+    
+    Args:
+        model_module: The module name of the model to train.
+    
+    Returns:
+        A tuple containing a boolean indicating whether the loss threshold was passed,
+        and the final loss value.
+    """
     threshold = 0.1
     module = importlib.import_module(model_module)
     NUMBER_CLASSES = 10
@@ -58,6 +68,9 @@ def train(model_module: str) -> tuple[bool, float]:
 
 @pytest.mark.skip(reason='This test takes too long to run')
 def test_LeNet() -> None:
+    """
+    Test function for training the LeNet model.
+    """
     model_module = 'Models.LeNet_5'
     threshold_passed, loss = train(model_module)
     assert threshold_passed, f'Loss is {loss}'
@@ -65,6 +78,9 @@ def test_LeNet() -> None:
 
 @pytest.mark.skip(reason='This test takes too long to run')
 def test_AlexNet() -> None:
+    """
+    Test function for training the AlexNet model.
+    """
     model_module = 'Models.AlexNet'
     threshold_passed, loss = train(model_module)
     assert threshold_passed, f'Loss is {loss}'

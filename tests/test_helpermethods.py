@@ -15,6 +15,10 @@ from utils import helpermethods as helpermethods
 
 @pytest.mark.skip("Skip to pass GitHub Actions")
 def test_get_paths_and_labels() -> None:
+    """
+    Test function for the get_paths_and_labels() method in the helpermethods module.
+    Skipped for GH Actions as it is make for local testing.
+    """
     # Create a temporary file with sample data
     with tempfile.NamedTemporaryFile(mode='w+', delete=False) as f:
         f.write("E:/ML/Datasets/imagenette2/train/n01440764/ILSVRC2012_val_00000293.JPEG,tench\n")
@@ -36,7 +40,10 @@ def test_get_paths_and_labels() -> None:
 
 @pytest.mark.skip(reason="Takes too long but works")
 def test_load_dataset() -> None:
-
+    """
+    Test function for the load_dataset() method in the helpermethods module.
+    Skip this test as it takes too long to run.
+    """
     module = CustomDatasetRaw
     file = "E:/ML/Datasets/imagenette2/train.txt"
     image_paths, classes = helpermethods.get_paths_and_labels(file)
@@ -68,6 +75,9 @@ def test_load_dataset() -> None:
 
 
 def test_compute_accuracy_metric_1() -> None:
+    """
+    Test function for the compute_accuracy() method in the helpermethods module with metric 1.
+    """
     # Set up input tensors
     output = torch.tensor([[0.2, 0.3, 0.5], [0.1, 0.4, 0.5], [0.3, 0.2, 0.5]])
     labels = torch.tensor([2, 2, 1])
@@ -84,6 +94,9 @@ def test_compute_accuracy_metric_1() -> None:
 
 
 def test_compute_accuracy_metric_2() -> None:
+    """
+    Test function for the compute_accuracy() method in the helpermethods module with metric 2.
+    """
     # Set up input tensors
     output = torch.tensor([[0.2, 0.3, 0.5], [0.1, 0.4, 0.5], [0.3, 0.2, 0.5]])
     labels = torch.tensor([1, 2, 1])
@@ -100,6 +113,9 @@ def test_compute_accuracy_metric_2() -> None:
 
 
 def test_compute_accuracy_metric_full() -> None:
+    """
+    Test function for the compute_accuracy() method in the helpermethods module with full accuracy metric.
+    """
     # Set up input tensors
     output = torch.tensor([[0.2, 0.3, 0.5], [0.1, 0.4, 0.5], [0.3, 0.2, 0.5]])
     labels = torch.tensor([0, 0, 0])
@@ -116,6 +132,9 @@ def test_compute_accuracy_metric_full() -> None:
 
 
 def test_make_folder() -> None:
+    """
+    Test function for the make_folder() method in the helpermethods module.
+    """
     test_dir = tempfile.TemporaryDirectory()
     test_path = os.path.join(test_dir.name, 'test_folder')
 
@@ -141,6 +160,9 @@ def test_make_folder() -> None:
 
 
 def test_make_folder_with_existing_folder() -> None:
+    """
+    Test function for the make_folder() method in the helpermethods module when the folder already exists.
+    """
     test_dir = tempfile.TemporaryDirectory()
     test_path = os.path.join(test_dir.name, 'test_folder')
 
@@ -153,6 +175,9 @@ def test_make_folder_with_existing_folder() -> None:
 
 
 def test_make_folder_with_existing_file() -> None:
+    """
+    Test function for the make_folder() method in the helpermethods module when a file with the same name exists.
+    """
     test_dir = tempfile.TemporaryDirectory()
     test_path = os.path.join(test_dir.name, 'test_file')
 
@@ -166,11 +191,17 @@ def test_make_folder_with_existing_file() -> None:
 
 
 def processMock(queue: multiprocessing.Queue) -> None:  # type: ignore
+    """
+    Mock function for the multiprocessing process.
+    """
     result = [1, 2, 3]
     queue.put(result)
 
 
 def test_send_result() -> None:
+    """
+    Test function for the send_result() method in the helpermethods module.
+    """
     queue = multiprocessing.Queue()  # type: ignore
     p = multiprocessing.Process(target=processMock, args=(queue,))
     p.start()

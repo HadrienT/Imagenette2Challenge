@@ -14,13 +14,18 @@ from utils import SerializeDataset
 
 @pytest.mark.skip(reason="Skip because of dataset")
 def test_get_class_folders() -> None:
+    """
+    Test the get_class_folders function in the SerializeDataset module.
+    """
     folders = SerializeDataset.get_class_folders('E:\\ML\\Datasets\\imagenette2\\train')
     target = ['n01440764', 'n02102040', 'n02979186', 'n03000684', 'n03028079', 'n03394916', 'n03417042', 'n03425413', 'n03445777', 'n03888257']
     assert folders == target
 
 
 def test_make_hierarchy(monkeypatch: pytest.MonkeyPatch) -> None:
-
+    """
+    Test the make_hierarchy function in the SerializeDataset module.
+    """
     def mock_get_class_folders(root: str) -> List[str]:
         return ['n01440764', 'n02102040', 'n02979186', 'n03000684', 'n03028079', 'n03394916', 'n03417042', 'n03425413', 'n03445777', 'n03888257']
 
@@ -38,6 +43,9 @@ def test_make_hierarchy(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 def test_image_to_tensor() -> None:
+    """
+    Test the image_to_tensor function in the SerializeDataset module.
+    """
     root = ".\\tests\\test_images"
     transform = transforms.Compose([
         transforms.Resize((256, 256)),
@@ -64,6 +72,9 @@ def test_image_to_tensor() -> None:
 
 @pytest.mark.skip(reason="Skip because of dataset")
 def test_convert_dataset() -> None:
+    """
+    Test the convert_dataset function in the SerializeDataset module.
+    """
     root = "E:\\ML\\Datasets\\imagenette2"
     folders = ['train', 'val']
 

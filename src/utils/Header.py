@@ -3,6 +3,16 @@ from typing import Any
 
 
 def print_header(args: argparse.Namespace, params: dict[Any, Any]) -> None:
+    """
+    Prints the header information for the image classification.
+
+    Args:
+        args (argparse.Namespace): The parsed command-line arguments.
+        params (dict[Any, Any]): The dictionary of parameters independant of the CLI.
+
+    Returns:
+        None
+    """
     print("##########################################################################")
     print("#                                                                        #")
     print("#                          Image Classification                          #")
