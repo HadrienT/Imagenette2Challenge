@@ -70,7 +70,7 @@ def compute_accuracy(output: torch.Tensor, labels: torch.Tensor, top_targets: in
 
     :param output: The model's output.
     :param labels: Ground truth labels.
-    :param args: Command-line arguments.
+    :param top_targets: The number of predictions to consider when computing accuracy.
     :return: Accuracy of the model's output.
     """
     _, predicted = torch.topk(output, k=top_targets, dim=1)
@@ -84,8 +84,8 @@ def compute_accuracy_IPU(output: torch.Tensor, labels: torch.Tensor, top_targets
 
     :param output: The model's output.
     :param labels: Ground truth labels.
-    :param args: Command-line arguments.
-    :param device_iterations: Number of device iterations.
+    :param top_targets: The number of predictions to consider when computing accuracy.
+    :param device_iterations: The number of device iterations set in poptorch.Options, which impacts the batching on IPU.
     :return: Accuracy of the model's output.
     """
     # Reshape labels to match output's batch size
