@@ -5,6 +5,7 @@ if "Imagenette2Challenge" not in os.getcwd():
 
 import datetime
 import os
+import yaml
 
 import numpy as np
 import torch
@@ -207,14 +208,18 @@ def main():
 
 
 if __name__ == "__main__":
-    RESET = False
-    EPOCHS = 1
-    MODEL_NAME = "LeNet_5"
-    BATCH_SIZE = 32
-    TARGET = 1
-    NUMBER_CLASSES = 10
-    DEVICE_ITERATIONS = 1
-    CHECKPOINT = "test"
-    TRAINING_MODE = False
+    # Read the YAML file
+    with open("./src/runParams.yaml", "r") as file:
+        config = yaml.safe_load(file)
 
+    # Access the values from the config dictionary
+    RESET = config["RESET"]
+    EPOCHS = config["EPOCHS"]
+    MODEL_NAME = config["MODEL_NAME"]
+    BATCH_SIZE = config["BATCH_SIZE"]
+    TARGET = config["TARGET"]
+    NUMBER_CLASSES = config["NUMBER_CLASSES"]
+    DEVICE_ITERATIONS = config["DEVICE_ITERATIONS"]
+    CHECKPOINT = config["CHECKPOINT"]
+    TRAINING_MODE = config["TRAINING_MODE"]
     main()

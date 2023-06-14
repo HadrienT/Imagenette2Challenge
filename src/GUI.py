@@ -1,3 +1,8 @@
+"""
+    This GUI is currently disabled as it slowed too much the training process.
+    Run.py has been modified and is no longer using this GUI.
+"""
+
 import tkinter as tk
 from tkinter import messagebox
 from tkinter import ttk

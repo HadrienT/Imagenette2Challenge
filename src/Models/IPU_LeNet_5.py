@@ -23,7 +23,7 @@ class Model(nn.Module):
         self.fc3 = nn.Linear(in_features=84, out_features=num_class)
         self.loss = loss_function
 
-    def forward(self, x: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
+    def forward(self, x: torch.Tensor, target: torch.Tensor = None) -> Tuple[torch.Tensor, torch.Tensor]:
         """"""
         x = self.conv1(x)
         x = torch.tanh(x)
@@ -43,4 +43,7 @@ class Model(nn.Module):
 
         x = self.fc3(x)
 
+        if self.training:
+            loss = self.loss(x, target)
+            return x, loss
         return x
