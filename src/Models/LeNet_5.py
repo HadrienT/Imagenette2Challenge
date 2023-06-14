@@ -1,10 +1,15 @@
 import torch.nn as nn
 import torch
-from typing import Tuple
+from typing import Tuple, Any
 
 
 class Model(nn.Module):
-    def __init__(self, num_class: int, loss_function: torch.nn.modules.loss) -> None:
+    """
+    Implements the Lenet model architecture.
+
+    Based on the paper: http://yann.lecun.com/exdb/publis/pdf/lecun-01a.pdf
+    """
+    def __init__(self, num_class: int, loss_function: Any) -> None:
         super(Model, self).__init__()
 
         hidden_size_1 = 6
@@ -19,7 +24,7 @@ class Model(nn.Module):
         self.loss = loss_function
 
     def forward(self, x: torch.Tensor, target: torch.Tensor = None) -> Tuple[torch.Tensor, torch.Tensor]:
-
+        """"""
         x = self.conv1(x)
         x = torch.tanh(x)
         x = self.pool(x)

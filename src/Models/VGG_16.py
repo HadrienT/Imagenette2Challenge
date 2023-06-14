@@ -3,6 +3,11 @@ import torch
 
 
 class Model(nn.Module):
+    """
+    Implements the AlexNet model architecture.
+
+    Based on the paper: https://paperswithcode.com/method/vgg-16
+    """
     def __init__(self, num_class: int) -> None:
         super(Model, self).__init__()
         self.conv1_bloc1 = nn.Conv2d(in_channels=3, out_channels=64, kernel_size=(3, 3), stride=1, padding=1)
@@ -16,6 +21,7 @@ class Model(nn.Module):
         self.fc3 = nn.Linear(in_features=4096, out_features=num_class)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
+        """"""
         for _ in range(2):
             x = torch.relu(self.conv1_bloc1(x))
             x = torch.relu(self.conv2_bloc1(x))

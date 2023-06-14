@@ -140,7 +140,7 @@ def main():
 
                     # Calculate validation loss and accuracy
                     train_accuracy = helpermethods.compute_accuracy_IPU(
-                        outputs, labels, args, DEVICE_ITERATIONS
+                        outputs, labels, args.metric, DEVICE_ITERATIONS
                     )
 
                     # update metrics
@@ -166,7 +166,7 @@ def main():
                     loss = criterion(outputs, labels)
                     # Calculate validation loss and accuracy
                     val_accuracy = helpermethods.compute_accuracy_IPU(
-                        outputs, labels, args, DEVICE_ITERATIONS
+                        outputs, labels, args.metric, DEVICE_ITERATIONS
                     )
 
                     # update metrics

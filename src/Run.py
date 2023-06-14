@@ -181,7 +181,7 @@ def main() -> None:
 
                     # compute accuracy
                     start_acc = time.time()
-                    train_accuracy = helpermethods.compute_accuracy(outputs, labels, args)
+                    train_accuracy = helpermethods.compute_accuracy(outputs, labels, args.metric)
                     end_acc = time.time()
 
                     # update metrics
@@ -214,7 +214,7 @@ def main() -> None:
                     loss = criterion(outputs, labels)
 
                     # Calculate validation loss and accuracy
-                    val_accuracy = helpermethods.compute_accuracy(outputs, labels, args)
+                    val_accuracy = helpermethods.compute_accuracy(outputs, labels, args.metric)
 
                     # update metrics
                     val_loss_epoch.append(loss.item())

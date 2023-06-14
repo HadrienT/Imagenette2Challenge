@@ -1,14 +1,16 @@
-import pytest
-import tempfile
-import torch
-from torch.utils.data import DataLoader
-from torchvision import transforms
-import argparse
-from dataLoaders import CustomDatasetRaw
-from utils import helpermethods as helpermethods
 import os
 import stat
 import multiprocessing
+import tempfile
+import argparse
+
+import pytest
+import torch
+from torch.utils.data import DataLoader
+from torchvision import transforms
+
+from dataLoaders import CustomDatasetRaw
+from utils import helpermethods as helpermethods
 
 
 @pytest.mark.skip("Skip to pass GitHub Actions")
@@ -74,7 +76,7 @@ def test_compute_accuracy_metric_1() -> None:
     args = argparse.Namespace(metric=1)
 
     # Call the function
-    accuracy = helpermethods.compute_accuracy(output, labels, args)
+    accuracy = helpermethods.compute_accuracy(output, labels, args.metric)
 
     # Check the output
     expected_accuracy = 2
@@ -90,7 +92,7 @@ def test_compute_accuracy_metric_2() -> None:
     args = argparse.Namespace(metric=2)
 
     # Call the function
-    accuracy = helpermethods.compute_accuracy(output, labels, args)
+    accuracy = helpermethods.compute_accuracy(output, labels, args.metric)
 
     # Check the output
     expected_accuracy = 2
@@ -106,7 +108,7 @@ def test_compute_accuracy_metric_full() -> None:
     args = argparse.Namespace(metric=3)
 
     # Call the function
-    accuracy = helpermethods.compute_accuracy(output, labels, args)
+    accuracy = helpermethods.compute_accuracy(output, labels, args.metric)
 
     # Check the output
     expected_accuracy = len(output)
